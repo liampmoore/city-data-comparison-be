@@ -64,7 +64,7 @@ router.get("/login/google", passport.authenticate("google", {
 }));
 
 router.get("/login/google/redirect", passport.authenticate("google"), (req, res) => {
-  // res.redirect("http://localhost:3000"); !!!!!
+  res.redirect("http://localhost:3000");
   res.json(req.user)
 })
 
@@ -73,17 +73,17 @@ router.get("/login/linkedin", passport.authenticate("linkedin", {
 }));
 
 router.get("/login/linkedin/redirect", passport.authenticate("linkedin"), (req, res) => {
-  // res.redirect("http://localhost:3000"); !!!!!
+  res.redirect("http://localhost:3000"); 
   res.json(req.user)
 })
 
 router.get("/login/facebook", passport.authenticate("facebook", {
-  // scope: ['profile']
+//   scope: ['profile']
   
 }));
 
 router.get("/login/facebook/redirect", passport.authenticate("facebook"), (req, res) => {
-  // res.redirect("http://localhost:3000"); !!!!!
+  res.redirect("http://localhost:3000"); 
   res.json(req.user)
 })
 
