@@ -6,7 +6,8 @@
   "scripts": {
     "server": "nodemon index.js",
     "test": "jest --watch",
-    "start": "node index.js"
+    "start": "node index.js",
+    "build": "node index.js"
   },
   "jest": {
     "server": "nodemon index.js",
