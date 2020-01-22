@@ -14,12 +14,6 @@ exports.up = function(knex) {
         users.string("facebookid", 255)
         .unique();
     })
-    .createTable('cities' , cities => {
-      cities.increments();
-
-      cities.integer('city_id')
-      .notNullable();
-    })
     .createTable('users_cities', users_cities => {
       users_cities.increments();
 
@@ -30,18 +24,13 @@ exports.up = function(knex) {
       .onDelete('CASCADE')
       .onUpdate('CASCADE');
 
-      user_cities.integer('city_id')
-      .references('city_id')
-      .inTable('cities')
+      users_cities.integer('city_id')
       .notNullable()
-      .onDelete('CASCADE')
-      .onUpdate('CASCADE');
     });
   };
   
   exports.down = function(knex, Promise) {
     return knex.schema.dropTableIfExists('users_cities')
-    .dropTableIfExists('cities')
     .dropTableIfExists('users');
   };
   
