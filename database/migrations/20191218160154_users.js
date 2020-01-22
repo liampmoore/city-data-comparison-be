@@ -13,10 +13,28 @@ exports.up = function(knex) {
         .unique();
         users.string("facebookid", 255)
         .unique();
+    })
+    .createTable('cities' , cities => {
+      cities.increments();
+
+      cities.string('name', 255)
+      .notNullable();
+    })
+    .createTable('users_cities', users_cities => {
+      users_cities.increments();
+
+      users_cities.integer('users_id')
+      .references('id')
+      .inTable('users')
+      .notNullable()
+      .onDelete('CASCADE')
+      .onUpdate('CASCADE');
     });
   };
   
   exports.down = function(knex, Promise) {
-    return knex.schema.dropTableIfExists('users');
+    return knex.schema.dropTableIfExists('users_cities')
+    .dropTableIfExists('cities')
+    .dropTableIfExists('users');
   };
   
