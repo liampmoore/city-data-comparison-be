@@ -5,7 +5,8 @@ const passport = require('passport');
 const passportSetup = require('../config/passport-setup');
 const keys = require('../config/secrets');
 const cookieSession = require('cookie-session');
-
+require('dotenv').config();
+ 
 
 const authRouter = require('../auth/auth-router.js');
 
@@ -17,7 +18,7 @@ server.use(cookieSession({
     keys: [keys.session.cookieKey]
 }))
 
-
+ 
 server.use(helmet());
 server.use(cors());
 server.use(express.json());
