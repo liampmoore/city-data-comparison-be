@@ -1,5 +1,6 @@
 const router = require('express').Router();
 const multer = require('multer');
+const db = require("../data/dbConfig.js");
 
 // const bcrypt = require('bcryptjs');
 // const secrets = require('../config/secrets');
@@ -19,6 +20,16 @@ const upload =multer({
 }).single('user-image')
 
 const Users = require('./user-model');
+
+router.post('/upload' , upload.single('user-avatar'), (req, res) => {
+        const sql = db('users').insert({name: req.file.filename, type: req.file.mimetype, size: req.file.size})
+        .then(avatar => {
+            res.status(200).json({message: 'Image Uploaded'})
+        })
+        .catch(err => {
+            res.status(401).json({message: 'failed to upload image', err})
+        });
+})
 
 router.get("/:id", (req, res) => {
     Users.getFavs(req.params.id)
