@@ -15,9 +15,9 @@ const storage = multer.diskStorage({
     }
 })
 
-const upload =multer({
+const upload = multer({
     storage: storage
-}).single('user-image')
+})
 
 const Users = require('./user-model');
 
