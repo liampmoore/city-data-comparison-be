@@ -21,10 +21,11 @@ const upload =multer({
 
 const Users = require('./user-model');
 
-router.post('/upload' , upload.single('user-avatar'), (req, res) => {
+router.post('/upload' , upload.single('user-image'), (req, res) => {
         const sql = db('users').insert({name: req.file.filename, type: req.file.mimetype, size: req.file.size})
+        sql(upload.single('user-image'))
         .then(avatar => {
-            res.status(200).json({message: 'Image Uploaded'})
+            res.status(200).json({message: 'Image Uploaded', avatar})
         })
         .catch(err => {
             res.status(401).json({message: 'failed to upload image', err})
