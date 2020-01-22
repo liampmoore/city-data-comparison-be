@@ -17,7 +17,7 @@ exports.up = function(knex) {
     .createTable('cities' , cities => {
       cities.increments();
 
-      cities.string('name', 255)
+      cities.integer('city_id')
       .notNullable();
     })
     .createTable('users_cities', users_cities => {
@@ -26,6 +26,13 @@ exports.up = function(knex) {
       users_cities.integer('users_id')
       .references('id')
       .inTable('users')
+      .notNullable()
+      .onDelete('CASCADE')
+      .onUpdate('CASCADE');
+
+      user_cities.integer('city_id')
+      .references('city_id')
+      .inTable('cities')
       .notNullable()
       .onDelete('CASCADE')
       .onUpdate('CASCADE');
