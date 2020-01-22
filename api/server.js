@@ -8,6 +8,7 @@ const cookieSession = require('cookie-session');
 
 
 const authRouter = require('../auth/auth-router.js');
+const userRouter = require('../users/user-router.js');
 
 
 const server = express();
@@ -25,6 +26,7 @@ server.use(passport.initialize());
 server.use(passport.session());
 
 server.use('/api/auth', authRouter);
+server.use('/api/users', userRouter);
 
 
 module.exports = server;
