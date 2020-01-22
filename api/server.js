@@ -5,19 +5,13 @@ const passport = require('passport');
 const passportSetup = require('../config/passport-setup');
 const keys = require('../config/secrets');
 const cookieSession = require('cookie-session');
-const multer = require('multer');
+
 
 
 const authRouter = require('../auth/auth-router.js');
 const userRouter = require('../users/user-router.js');
 
-// storage engine
-const storage = multer.diskStorage({
-    destination: './public/uploads/',
-    filename: function(req, file, cb) {
-        cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
-    }
-})
+
 
 const server = express();
 

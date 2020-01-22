@@ -11,8 +11,11 @@ exports.up = function(knex) {
         .unique();
       users.string("linkedinid", 255)
         .unique();
-        users.string("facebookid", 255)
+      users.string("facebookid", 255)
         .unique();
+      users.string('image_name');
+      users.string('image_type');
+      users.integer('size');
     })
     .createTable('cities' , cities => {
       cities.increments();

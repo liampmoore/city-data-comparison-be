@@ -1,9 +1,22 @@
 const router = require('express').Router();
+const multer = require('multer');
 
 // const bcrypt = require('bcryptjs');
 // const secrets = require('../config/secrets');
 // const passport = require('passport');
 // const validator = require('password-validator')
+
+// storage engine
+const storage = multer.diskStorage({
+    destination: './public/uploads/',
+    filename: function(req, file, cb) {
+        cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
+    }
+})
+
+const upload =multer({
+    storage: storage
+}).single('user-image')
 
 const Users = require('./user-model');
 
