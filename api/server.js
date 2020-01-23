@@ -20,8 +20,8 @@ server.use(cookieSession({
     keys: [keys.session.cookieKey]
 }))
 
-//public folder
-server.use(express.static('./public'));
+
+
 
 server.use(helmet());
 server.use(cors());
