@@ -13,7 +13,6 @@ exports.up = function(knex) {
         .unique();
       users.string("facebookid", 255)
         .unique();
-      users.string('userimage');
     })
     .createTable('cities' , cities => {
       cities.increments();
@@ -30,7 +29,15 @@ exports.up = function(knex) {
       .notNullable()
       .onDelete('CASCADE')
       .onUpdate('CASCADE');
-    });
+    })
+    .createTable('users_avatar', users_avatar => {
+      users_avatar.increments();
+      users_avatar.integer('users_id')
+      .references('id')
+      .inTable('users')
+      .onDelete('CASCADE')
+      .onUpdate('CASCADE');
+    })
   };
   
   exports.down = function(knex, Promise) {

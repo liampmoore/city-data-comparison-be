@@ -4,22 +4,22 @@ const multer = require('multer');
 const Users = require('./user-model.js');
 const db = require("../database/dbConfig.js");
 
-// const bcrypt = require('bcryptjs');
+const bcrypt = require('bcryptjs');
 // const secrets = require('../config/secrets');
 // const passport = require('passport');
 // const validator = require('password-validator')
 
 const storage = multer.diskStorage({
     destination: function(req, file, cb) {
-        cb(null, './uploads/');
+        cb(null, 'uploads/');
     },
     filename: function(req, file, cb) {
-        cb(null, new Date(). toISOString() + file.originalname);
+        cb(null, new Date().toISOString() + file.originalname);
     }
 });
 
 const fileFilter = (req, file, cb) => {
-    if (file.mimtype === 'image/jpeg' || file.mimetype === 'image/png') {
+    if (file.mimetype === 'image/jpeg' || file.mimetype === 'image/png') {
         cb(null, true);
     } else {
     cb(null, false);
@@ -28,7 +28,7 @@ const fileFilter = (req, file, cb) => {
 
 
 const upload = multer({
-    storage: storage, 
+    destination: storage, 
     limits: {
     fileSize: 1024 * 1024 *10
     },
@@ -36,19 +36,18 @@ const upload = multer({
 });
 
 
-router.put('/:id', upload.single('user-image'), (req, res, next) => {
-    const userimg = new 
+router.put('/:id', upload.single('userimage'), (req, res, next) => {
 
-    userimg
-    .save()
-    .then(res => {
-        res.status(201).json({
-            message: 'Image Uploaded'
-        })
+    console.log(req.file);
+    
+
+    Users.updateUser(req.params.id, req.file.path)
+    .then(user => {
+        res.status(201).json(user)
     })
     .catch(err => {
         res.status(401).json({
-            message: 'Failed to upload image!', err
+            message: 'Failed to update!', err
         })
     })
 })

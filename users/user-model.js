@@ -9,9 +9,7 @@ module.exports = {
 };
 
 function updateUser(id, changes) {
-  return db('users')
-    .where({id})
-    .update(changes, '*');
+  return db('users').where({id}).update('userimage', changes)
 }
 
 function getFavs(userid) {
