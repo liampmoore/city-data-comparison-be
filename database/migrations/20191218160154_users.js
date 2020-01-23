@@ -13,6 +13,11 @@ exports.up = function(knex) {
         .unique();
       users.string("facebookid", 255)
         .unique();
+      users.string('first_name');
+      users.string('last_name');
+      users.string('email');
+      users.string('city');
+      users.string('state');
     })
     .createTable('cities' , cities => {
       cities.increments();
