@@ -9,9 +9,6 @@ const db = require("../database/dbConfig.js");
 // const passport = require('passport');
 // const validator = require('password-validator')
 
-const upload = multer({dest: 'uploads/', limits: {
-    fileSize: 1024 * 1024 *10
-}});
 const storage = multer.diskStorage({
     destination: function(req, file, cb) {
         cb(null, './uploads/');
@@ -28,6 +25,16 @@ const fileFilter = (req, file, cb) => {
     cb(null, false);
     }
 }
+
+
+const upload = multer({
+    dest: 'uploads/', 
+    limits: {
+    fileSize: 1024 * 1024 *10
+    },
+    fileFilter: fileFilter
+});
+
 
 router.post('/upload', upload.single('user-image'), (req, res, next) => {
 
