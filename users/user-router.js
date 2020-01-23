@@ -64,6 +64,16 @@ router.get('/:id/profile', (req, res) => {
     });
 })
 
+router.put('/:id/profile', (req,res) => {
+    Users.updateUser(req.params.id, req.body)
+    .then(user => {
+        res.status(200).json(user);
+    })
+    .catch(err => {
+        res.status(500).json({message: 'Unable to update', error: err})
+    })
+})
+
 
 router.get("/:id", (req, res) => {
     Users.getFavs(req.params.id)

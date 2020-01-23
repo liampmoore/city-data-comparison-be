@@ -6,8 +6,15 @@ module.exports = {
   getFavs,
   findById,
   addImage, 
-  findUserById
+  findUserById,
+  updateUser
 };
+
+function updateUser(id, changes) {
+  return db('users')
+    .where({id})
+    .update(changes, '*');
+}
 
 function findUserById(user) {
   return db('users as u')
