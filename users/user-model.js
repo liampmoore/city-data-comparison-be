@@ -1,11 +1,16 @@
-const db = require("../data/dbConfig.js");
+const db = require("../database/dbConfig.js");
 
 module.exports = {
   addFav,
   removeFav,
   getFavs,
-  findById
+  findById,
+  addImage
 };
+
+function addImage(image) {
+  return db('users_avatar').insert(image)
+}
 
 function getFavs(userid) {
   return db("users_cities").where({ user_id: userid });
