@@ -36,8 +36,6 @@ const upload = multer({
     fileFilter: fileFilter
   });
 
-
-
 router.post('/', upload.single('userimage'), (req, res, next) => {
 
     console.log(req.file);
@@ -53,6 +51,27 @@ router.post('/', upload.single('userimage'), (req, res, next) => {
         })
     })
 })
+
+router.put('/:id/profile/image', upload.single('userimage'), (req, res, next) => {
+    console.log(req.file);
+    const id = req.params.id
+    const userimg = ({users_id: req.body.users_id, userimage: req.file.path})
+
+    if (req.file) {
+        const image = req.file.filename;
+        userimg.image = image;
+    }
+
+    Users.addImage(id, userimg)
+    .then(user => {
+        res.status(201).json(user)
+    })
+    .catch(err => {
+        res.status(401).json({
+            message: 'Failed to update!', err
+        })
+    })
+  })
 
 router.get('/:id/profile', (req, res) => {
     Users.findUserById(req.params.id)
