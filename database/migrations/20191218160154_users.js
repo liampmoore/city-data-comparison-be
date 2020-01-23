@@ -11,7 +11,7 @@ exports.up = function(knex) {
         .unique();
       users.string("linkedinid", 255)
         .unique();
-        users.string("facebookid", 255)
+      users.string("facebookid", 255)
         .unique();
     })
     .createTable('users_cities', users_cities => {
@@ -26,7 +26,18 @@ exports.up = function(knex) {
 
       users_cities.integer('city_id')
       .notNullable()
-    });
+    })
+    .createTable('users_avatar', users_avatar => {
+      users_avatar.increments();
+      users_avatar.integer('users_id')
+      .references('id')
+      .inTable('users')
+      .notNullable()
+      .onDelete('CASCADE')
+      .onUpdate('CASCADE');
+      users_avatar.string('userimage')
+      .notNullable();
+    })
   };
   
   exports.down = function(knex, Promise) {
