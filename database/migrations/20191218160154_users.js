@@ -13,7 +13,7 @@ exports.up = function(knex) {
         .unique();
       users.string("facebookid", 255)
         .unique();
-      users.string('user-image');
+      users.string('userimage');
     })
     .createTable('cities' , cities => {
       cities.increments();

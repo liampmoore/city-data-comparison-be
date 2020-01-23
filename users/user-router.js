@@ -28,7 +28,7 @@ const fileFilter = (req, file, cb) => {
 
 
 const upload = multer({
-    dest: 'uploads/', 
+    storage: storage, 
     limits: {
     fileSize: 1024 * 1024 *10
     },
@@ -37,7 +37,7 @@ const upload = multer({
 
 
 router.post('/upload', upload.single('user-image'), (req, res, next) => {
-
+    const userimg = db('users').insert({userimage: req.file.path})
 })
 
 
