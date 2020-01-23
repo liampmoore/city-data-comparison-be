@@ -4,8 +4,15 @@ module.exports = {
   addFav,
   removeFav,
   getFavs,
-  findById
+  findById,
+  updateUser
 };
+
+function updateUser(id, changes) {
+  return db('users')
+    .where({id})
+    .update(changes, '*');
+}
 
 function getFavs(userid) {
   return db("users_cities").where({ user_id: userid });
