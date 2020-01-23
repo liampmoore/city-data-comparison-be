@@ -7,8 +7,10 @@ const keys = require('../config/secrets');
 const cookieSession = require('cookie-session');
 
 
+
 const authRouter = require('../auth/auth-router.js');
 const userRouter = require('../users/user-router.js');
+
 
 
 const server = express();
@@ -19,14 +21,19 @@ server.use(cookieSession({
 }))
 
 
+
+
 server.use(helmet());
 server.use(cors());
 server.use(express.json());
 server.use(passport.initialize());
 server.use(passport.session());
 
+// server.use('/uploads', express.static('uploads'));
 server.use('/api/auth', authRouter);
 server.use('/api/users', userRouter);
+
+
 
 
 module.exports = server;
