@@ -1,7 +1,6 @@
 
 const router = require('express').Router();
 const multer = require('multer');
-const Users = require('./user-model.js');
 const db = require("../database/dbConfig.js");
 
 const bcrypt = require('bcryptjs');
@@ -14,12 +13,12 @@ const Preferences = require('../preferences/preference-model.js')
 
 const storage = multer.diskStorage({
     destination: function(req, file, cb) {
-        cb(null, './uploads/');
+      cb(null, './uploads/');
     },
     filename: function(req, file, cb) {
-        cb(null, new Date().toISOString() + file.originalname);
+        cb(null, Date.now() + file.originalname);
     }
-});
+  });
 
 const fileFilter = (req, file, cb) => {
     if (file.mimetype === 'image/jpeg' || file.mimetype === 'image/png') {
@@ -30,12 +29,12 @@ const fileFilter = (req, file, cb) => {
 }
 
 const upload = multer({
-    storage: storage, 
+    storage: storage,
     limits: {
-    fileSize: 1024 * 1024 *10
+      fileSize: 1024 * 1024 * 5
     },
     fileFilter: fileFilter
-});
+  });
 
 
 

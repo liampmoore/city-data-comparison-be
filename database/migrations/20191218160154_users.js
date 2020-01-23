@@ -30,16 +30,15 @@ exports.up = function(knex) {
       .onDelete('CASCADE')
       .onUpdate('CASCADE');
     })
-    .createTable('users_avatar', users_avatar => {
-      users_avatar.increments();
-      users_avatar.integer('users_id')
+    .createTable('users_image', users_image => {
+      users_image.increments();
+      users_image.integer('users_id')
       .references('id')
       .inTable('users')
       .notNullable()
       .onDelete('CASCADE')
       .onUpdate('CASCADE');
-      users_avatar.string('userimage')
-      .notNullable();
+      users_image.string('userimage');
     })
   };
   

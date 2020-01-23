@@ -9,7 +9,7 @@ module.exports = {
 };
 
 function addImage(image) {
-  return db('users_avatar').insert(image)
+  return db('users_image').insert(image)
 }
 
 function getFavs(userid) {
