@@ -1,13 +1,10 @@
 const router = require('express').Router();
 
-// const bcrypt = require('bcryptjs');
-// const secrets = require('../config/secrets');
-// const passport = require('passport');
-// const validator = require('password-validator')
-
 const Users = require('./user-model');
 
-router.get("/:id", (req, res) => {
+
+//GET a users favorited cities based on users_id
+router.get("/favs/:id", (req, res) => {
     Users.getFavs(req.params.id)
     .then(favs => {
         res.json(favs);
@@ -18,8 +15,9 @@ router.get("/:id", (req, res) => {
     });
 })
 
-router.post("/", (req, res) => {
-    Users.addFav(req.body)
+//POST a favorite using a users_id in url and city_id in the body of the request
+router.post("/favs/:id", (req, res) => {
+    Users.addFav(req.body.city_id, req.params.id)
     .then(fav => {
         res.json(fav);
     })
@@ -29,8 +27,10 @@ router.post("/", (req, res) => {
     });
 })
 
-router.delete("/:id", (req, res) => {
-    Users.removeFav(req.params.id)
+
+//DELETE the favorite based on the id of the table entry
+router.delete("/favs", (req, res) => {
+    Users.removeFav(req.body.id)
     .then(fav => {
       res.json(fav);
     })
