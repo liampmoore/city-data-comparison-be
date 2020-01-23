@@ -35,8 +35,11 @@ exports.up = function(knex) {
       users_avatar.integer('users_id')
       .references('id')
       .inTable('users')
+      .notNullable()
       .onDelete('CASCADE')
       .onUpdate('CASCADE');
+      users_avatar.string('userimage')
+      .notNullable();
     })
   };
   

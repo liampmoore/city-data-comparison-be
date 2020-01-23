@@ -5,11 +5,11 @@ module.exports = {
   removeFav,
   getFavs,
   findById,
-  updateUser
+  addImage
 };
 
-function updateUser(id, changes) {
-  return db('users').where({id}).update('userimage', changes)
+function addImage(image) {
+  return db('users_avatar').insert(image)
 }
 
 function getFavs(userid) {

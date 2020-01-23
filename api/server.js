@@ -29,7 +29,7 @@ server.use(express.json());
 server.use(passport.initialize());
 server.use(passport.session());
 
-server.use('/uploads', express.static('uploads'));
+// server.use('/uploads', express.static('uploads'));
 server.use('/api/auth', authRouter);
 server.use('/api/users', userRouter);
 

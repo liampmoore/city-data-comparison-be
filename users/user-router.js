@@ -11,7 +11,7 @@ const bcrypt = require('bcryptjs');
 
 const storage = multer.diskStorage({
     destination: function(req, file, cb) {
-        cb(null, 'uploads/');
+        cb(null, './uploads/');
     },
     filename: function(req, file, cb) {
         cb(null, new Date().toISOString() + file.originalname);
@@ -26,9 +26,8 @@ const fileFilter = (req, file, cb) => {
     }
 }
 
-
 const upload = multer({
-    destination: storage, 
+    storage: storage, 
     limits: {
     fileSize: 1024 * 1024 *10
     },
@@ -36,12 +35,13 @@ const upload = multer({
 });
 
 
-router.put('/:id', upload.single('userimage'), (req, res, next) => {
+
+router.post('/', upload.single('userimage'), (req, res, next) => {
 
     console.log(req.file);
-    
+    const userimg = ({users_id: req.body.users_id, userimage: req.file.path})
 
-    Users.updateUser(req.params.id, req.file.path)
+    Users.addImage(userimg)
     .then(user => {
         res.status(201).json(user)
     })
