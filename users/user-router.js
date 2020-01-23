@@ -1,7 +1,6 @@
 
 const router = require('express').Router();
 const multer = require('multer');
-const Users = require('./user-model.js');
 const db = require("../database/dbConfig.js");
 
 const bcrypt = require('bcryptjs');
@@ -14,12 +13,12 @@ const Preferences = require('../preferences/preference-model.js')
 
 const storage = multer.diskStorage({
     destination: function(req, file, cb) {
-        cb(null, './uploads/');
+      cb(null, './uploads/');
     },
     filename: function(req, file, cb) {
-        cb(null, new Date().toISOString() + file.originalname);
+        cb(null, Date.now() + file.originalname);
     }
-});
+  });
 
 const fileFilter = (req, file, cb) => {
     if (file.mimetype === 'image/jpeg' || file.mimetype === 'image/png') {
@@ -30,14 +29,12 @@ const fileFilter = (req, file, cb) => {
 }
 
 const upload = multer({
-    storage: storage, 
+    storage: storage,
     limits: {
-    fileSize: 1024 * 1024 *10
+      fileSize: 1024 * 1024 * 5
     },
     fileFilter: fileFilter
-});
-
-
+  });
 
 router.post('/', upload.single('userimage'), (req, res, next) => {
 
@@ -52,6 +49,47 @@ router.post('/', upload.single('userimage'), (req, res, next) => {
         res.status(401).json({
             message: 'Failed to update!', err
         })
+    })
+})
+
+router.put('/:id/profile/image', upload.single('userimage'), (req, res, next) => {
+    console.log(req.file);
+    const id = req.params.id
+    const userimg = ({users_id: req.body.users_id, userimage: req.file.path})
+
+    if (req.file) {
+        const image = req.file.filename;
+        userimg.image = image;
+    }
+
+    Users.addImage(id, userimg)
+    .then(user => {
+        res.status(201).json(user)
+    })
+    .catch(err => {
+        res.status(401).json({
+            message: 'Failed to update!', err
+        })
+    })
+  })
+
+router.get('/:id/profile', (req, res) => {
+    Users.findUserById(req.params.id)
+    .then(user => {
+        res.json(user)
+    })
+    .catch(err => {
+        res.status(401).json({message: 'Unable to find user', error: err})
+    });
+})
+
+router.put('/:id/profile', (req,res) => {
+    Users.updateUser(req.params.id, req.body)
+    .then(user => {
+        res.status(200).json(user);
+    })
+    .catch(err => {
+        res.status(500).json({message: 'Unable to update', error: err})
     })
 })
 
@@ -119,6 +157,9 @@ router.get('/:id/preferences', (req, res) => {
           res.status(500).json({message: "Unable to find any preferences. Try again later."})
      })
 })
+
+
+
 
 
 module.exports = router;

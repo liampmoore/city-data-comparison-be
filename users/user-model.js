@@ -5,11 +5,42 @@ module.exports = {
   removeFav,
   getFavs,
   findById,
-  addImage
+  addImage, 
+  editImage,
+  findUserById,
+  updateUser
 };
 
+function editImage(changes) {
+  return db('users_image')
+    .where({id})
+    .update(changes, '*');
+}
+
+function updateUser(id, changes) {
+  return db('users')
+    .where({id})
+    .update(changes, '*');
+}
+
+function findUserById(user) {
+  return db('users as u')
+    .join('users_image as i ', 'u.id', 'i.users_id')
+    .select(
+      'u.id',
+      'u.username',
+      'u.first_name',
+      'u.last_name',
+      'u.email',
+      'u.city',
+      'u.state',
+      'i.userimage'
+    )
+    .where('u.id', user)
+}
+
 function addImage(image) {
-  return db('users_avatar').insert(image)
+  return db('users_image').insert(image)
 }
 
 function getFavs(userid) {
