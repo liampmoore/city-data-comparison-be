@@ -54,6 +54,16 @@ router.post('/', upload.single('userimage'), (req, res, next) => {
     })
 })
 
+router.get('/:id/profile', (req, res) => {
+    Users.findUserById(req.params.id)
+    .then(user => {
+        res.json(user)
+    })
+    .catch(err => {
+        res.status(401).json({message: 'Unable to find user', error: err})
+    });
+})
+
 
 router.get("/:id", (req, res) => {
     Users.getFavs(req.params.id)
@@ -118,6 +128,9 @@ router.get('/:id/preferences', (req, res) => {
           res.status(500).json({message: "Unable to find any preferences. Try again later."})
      })
 })
+
+
+
 
 
 module.exports = router;

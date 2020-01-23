@@ -5,8 +5,24 @@ module.exports = {
   removeFav,
   getFavs,
   findById,
-  addImage
+  addImage, 
+  findUserById
 };
+
+function findUserById(user) {
+  return db('users as u')
+    .join('users_image as i ', 'u.id', 'i.users_id')
+    .select(
+      'u.username',
+      'u.first_name',
+      'u.last_name',
+      'u.email',
+      'u.city',
+      'u.state',
+      'i.userimage'
+    )
+    .where('u.id', user)
+}
 
 function addImage(image) {
   return db('users_image').insert(image)
