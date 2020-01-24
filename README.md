@@ -40,6 +40,14 @@ Requires users ID and a .jpeg or .png file
 
 
 # Cities - /api/favs 
-#### GET favorite cities for a single user 
-#### POST a city to favorites
-#### DELETE a city from favorites
+#### GET favorite cities for a single user - https://citrics-staging.herokuapp.com/api/favs/:id
+Give a user id in url
+Returns list of city ids 
+
+#### POST a city to favorites - https://citrics-staging.herokuapp.com/api/favs/:id
+Give user id in url and a {city_id: city_id} in body
+Returns the object {users_id: users_id, city_id: city_id}
+
+#### DELETE a city from favorites - https://citrics-staging.herokuapp.com/api/favs
+Give the id of the favorite to be deleted
+Returns 1 success or 0/error failure
