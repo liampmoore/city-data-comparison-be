@@ -81,6 +81,7 @@ router.get("/login/google", passport.authenticate("google", {
 }));
 
 router.get("/login/google/redirect", passport.authenticate("google"), (req, res) => {
+  res.setHeader( "Access-Control-Allow-Origin", "*" )
   res.redirect("https://www.citrics.io");
   res.json(req.user)
 })
@@ -92,7 +93,7 @@ router.get("/login/linkedin", passport.authenticate("linkedin", {
 router.get("/login/linkedin/redirect", passport.authenticate("linkedin"), (req, res) => {
   res.setHeader( "Access-Control-Allow-Origin", "*" )
   res.redirect("https://www.citrics.io"); 
-  res.json(req.user)
+  res.status(200).json(req.user)
 })
 
 router.get("/login/facebook", passport.authenticate("facebook", {
