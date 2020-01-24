@@ -19,12 +19,6 @@ exports.up = function(knex) {
       users.string('city');
       users.string('state');
     })
-    .createTable('cities' , cities => {
-      cities.increments();
-
-      cities.string('name', 255)
-      .notNullable();
-    })
     .createTable('users_cities', users_cities => {
       users_cities.increments();
 
@@ -34,6 +28,9 @@ exports.up = function(knex) {
       .notNullable()
       .onDelete('CASCADE')
       .onUpdate('CASCADE');
+
+      users_cities.integer('city_id')
+      .notNullable()
     })
     .createTable('users_image', users_image => {
       users_image.increments();
@@ -49,7 +46,6 @@ exports.up = function(knex) {
   
   exports.down = function(knex, Promise) {
     return knex.schema.dropTableIfExists('users_cities')
-    .dropTableIfExists('cities')
     .dropTableIfExists('users');
   };
   
