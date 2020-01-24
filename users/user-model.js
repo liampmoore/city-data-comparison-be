@@ -11,7 +11,7 @@ module.exports = {
   updateUser
 };
 
-function editImage(changes) {
+function editImage(id, changes) {
   return db('users_image')
     .where({id})
     .update(changes, '*');
@@ -23,7 +23,7 @@ function updateUser(id, changes) {
     .update(changes, '*');
 }
 
-function findUserById(user) {
+function findUserById(id) {
   return db('users as u')
     .join('users_image as i ', 'u.id', 'i.users_id')
     .select(
@@ -36,7 +36,7 @@ function findUserById(user) {
       'u.state',
       'i.userimage'
     )
-    .where('u.id', user)
+    .where('u.id', id)
 }
 
 function addImage(image) {
