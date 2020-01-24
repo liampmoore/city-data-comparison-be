@@ -69,7 +69,7 @@ router.post('/', upload.single('userimage'), (req, res, next) => {
 router.put('/:id/profile/image', upload.single('userimage'), (req, res, next) => {
     console.log(req.file);
     const id = req.params.id
-    const userimg = ({users_id: req.body.users_id, userimage: req.file.path})
+    const userimg = ({users_id: req.body.users_id, userimage: req.file.filename})
 
     Users.editImage(id, userimg)
     .then(user => {
