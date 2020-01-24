@@ -90,6 +90,7 @@ router.get("/login/linkedin", passport.authenticate("linkedin", {
 }));
 
 router.get("/login/linkedin/redirect", passport.authenticate("linkedin"), (req, res) => {
+  res.setHeader( "Control-Allow-Origin", "*" )
   res.redirect("https://www.citrics.io"); 
   res.json(req.user)
 })
