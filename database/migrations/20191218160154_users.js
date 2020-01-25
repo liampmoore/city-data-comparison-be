@@ -11,12 +11,41 @@ exports.up = function(knex) {
         .unique();
       users.string("linkedinid", 255)
         .unique();
-        users.string("facebookid", 255)
+      users.string("facebookid", 255)
         .unique();
-    });
+      users.string('first_name');
+      users.string('last_name');
+      users.string('email');
+      users.string('city');
+      users.string('state');
+    })
+    .createTable('users_cities', users_cities => {
+      users_cities.increments();
+
+      users_cities.integer('users_id')
+      .references('id')
+      .inTable('users')
+      .notNullable()
+      .onDelete('CASCADE')
+      .onUpdate('CASCADE');
+
+      users_cities.integer('city_id')
+      .notNullable()
+    })
+    .createTable('users_image', users_image => {
+      users_image.increments();
+      users_image.integer('users_id')
+      .references('id')
+      .inTable('users')
+      .notNullable()
+      .onDelete('CASCADE')
+      .onUpdate('CASCADE');
+      users_image.string('userimage');
+    })
   };
   
   exports.down = function(knex, Promise) {
-    return knex.schema.dropTableIfExists('users');
+    return knex.schema.dropTableIfExists('users_cities')
+    .dropTableIfExists('users');
   };
   

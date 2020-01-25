@@ -7,10 +7,16 @@ const keys = require('../config/secrets');
 const authenticate = require('../auth/requires-auth-middleware')
 
 
+
 const authRouter = require('../auth/auth-router.js');
+const userRouter = require('../users/user-router.js');
+const preferenceRouter = require('../preferences/preference-router.js');
+
 
 
 const server = express();
+
+
 
 
 
@@ -21,7 +27,11 @@ server.use(express.json());
 server.use(passport.initialize());
 server.use(passport.session());
 
+// server.use('/uploads', express.static('uploads'));
 server.use('/api/auth', authRouter);
+server.use('/api/users', userRouter);
+server.use('/api/preferences', preferenceRouter)
+
 
 
 module.exports = server;
