@@ -59,24 +59,22 @@ router.post('/login', (req, res) => {
 
 });
 
-router.get("/logout", (req, res) => {
-  if (req.session) {
-    req.session.destroy(error => {
-      if (error) {
-        res
-          .status(500)
-          .json({
-            message:
-              "Failed to Logout"
-          });
+
+router.delete('/:id', (req, res) => {
+  Users.remove(req.params.id)
+  .then(user => {
+      console.log(user)
+      if (!user) {
+          res.status(404).json({message: "No user exists by that ID!"})
       } else {
-        res.status(200).json({ message: "logged out successfully" });
+          res.status(200).json({message: "deleted"})
       }
-    });
-  } else {
-    res.status(200).json({ message: "Bye, Have a good time" });
-  }
-});
+  })
+  .catch(err => {
+      console.log(err)
+      res.status(500).json(err)
+  })
+})
 
 router.get("/login/google", passport.authenticate("google", {
   scope: ['profile']

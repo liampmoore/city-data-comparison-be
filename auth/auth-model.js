@@ -5,6 +5,7 @@ module.exports = {
     getAll,
     findById,
     findBy,
+    remove
     
 }
 
@@ -27,3 +28,9 @@ function findById(id) {
         .where({id})
         .first()
 }
+function remove(id) {
+    return db('auth')
+    .where({ id })
+    .first()
+    .del();
+  }
