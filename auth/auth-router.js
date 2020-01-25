@@ -1,5 +1,6 @@
 const router = require('express').Router();
 const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 const secrets = require('../config/secrets');
 const passport = require('passport');
 const validator = require('password-validator')
@@ -29,8 +30,8 @@ router.post('/register',  (req, res) => {
   user.password = hash;
   Users.add(user)
     .then(saved => {
-     req.session.username = saved.username;
-     res.status(201).json(saved)
+    const token = generateToken(saved)
+     res.status(201).json(token)
     })
     .catch(err => {
       res.status(500).json(err)
@@ -45,7 +46,8 @@ router.post('/login', (req, res) => {
     .first()
     .then(user => {
       if (user && bcrypt.compareSync(password, user.password)) {
-        req.session.username = user.username; 
+       const token = generateToken(user) 
+        // const token = generateToekn(user);
         res.status(200).json({
           message: `Welcome ${user.username}!`
         });
@@ -80,8 +82,12 @@ router.get("/login/google", passport.authenticate("google", {
 }));
 
 router.get("/login/google/redirect", passport.authenticate("google"), (req, res) => {
-  res.redirect("https://www.citrics.io");
-  res.json(req.user)
+  console.log(req.user);
+  //Add /callback after .io when you have component
+  // const token = generateToken(req.user);
+  const token = '123456'; //this is just an example remove when you have generateToken working
+  res.redirect(`https://www.citrics.io/callback?jwt=${req.user.googleid}&user=${JSON.stringify(req.user)}`);
+  //res.json(req.user)
 })
 
 router.get("/login/linkedin", passport.authenticate("linkedin", {
