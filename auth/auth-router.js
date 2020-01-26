@@ -2,13 +2,15 @@
 const router = require('express').Router();
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const secrets = require('../config/secrets');
+const secret = require('../config/secrets');
 const passport = require('passport');
 const validator = require('password-validator')
 const Users = require('./auth-model');
 
+
 router.post('/register',  (req, res) => {
   let user = req.body;
+  console.log(user)
   var schema = new validator();
 
   schema
@@ -33,9 +35,11 @@ router.post('/register',  (req, res) => {
     .then(saved => {
     const token = generateToken(saved)
      res.status(201).json(token)
+     
     })
     .catch(err => {
       res.status(500).json(err)
+      console.log(err, 'err')
     })
   // implement registration
 });
@@ -48,9 +52,8 @@ router.post('/login', (req, res) => {
     .then(user => {
       if (user && bcrypt.compareSync(password, user.password)) {
        const token = generateToken(user) 
-        // const token = generateToekn(user);
         res.status(200).json({
-          message: `Welcome ${user.username}!`
+          message: `Welcome ${user.username}!`, token
         });
       } else {
         res.status(401).json({message: "Invalid Credentials"})
@@ -81,12 +84,13 @@ router.get("/login/google", passport.authenticate("google", {
 }));
 
 router.get("/login/google/redirect", passport.authenticate("google"), (req, res) => {
-  console.log(req.user);
   //Add /callback after .io when you have component
-  // const token = generateToken(req.user);
-  const token = '123456'; //this is just an example remove when you have generateToken working
-  res.redirect(`https://www.citrics.io/callback?jwt=${req.user.googleid}&user=${JSON.stringify(req.user)}`);
-  //res.json(req.user)
+  const token = generateToken(req.user);
+  
+  console.log(req.user);
+  res.redirect(`https://citrics.io/callback?jwt=${token}&user=${JSON.stringify(req.user)}`);
+  
+
 })
 
 router.get("/login/linkedin", passport.authenticate("linkedin", {
@@ -94,8 +98,10 @@ router.get("/login/linkedin", passport.authenticate("linkedin", {
 }));
 
 router.get("/login/linkedin/redirect", passport.authenticate("linkedin"), (req, res) => {
-  res.redirect("https://www.citrics.io"); 
-  res.json(req.user)
+  const token = generateToken(req.user);
+
+  res.redirect(`https://www.citrics.io/callback?jwt=${token}&user=${JSON.stringify(req.user)}`);
+ 
 })
 
 router.get("/login/facebook", passport.authenticate("facebook", {
@@ -104,10 +110,21 @@ router.get("/login/facebook", passport.authenticate("facebook", {
 }));
 
 router.get("/login/facebook/redirect", passport.authenticate("facebook"), (req, res) => {
-  res.redirect("https://www.citrics.io"); 
-  res.json(req.user)
+  const token = generateToken(req.user);
+
+  res.redirect(`https://www.citrics.io/callback?jwt=${token}&user=${JSON.stringify(req.user)}`); 
+  
 })
 
-
+function generateToken(user) {
+  const payload = {
+    username: user.username,
+    
+  };
+  const options = {
+    expiresIn: "1d"
+  };
+  return jwt.sign(payload, secret.jwtSecret, options);
+}
 
 module.exports = router;

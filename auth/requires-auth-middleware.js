@@ -1,21 +1,20 @@
-const jwt = require('jsonwebtoken')
+const jwt = require('jsonwebtoken');
+const secrets = require('../config/secrets');
 
 module.exports = (req, res, next) => {
-    const token = req.headers.authorization
-    if(token){
-        const secret = process.env.JWT_SECRET
+  const token = req.headers.authorization;
+  const secret = secrets.jwtSecret;
 
-        jwt.verify(token, secret, (error, decodedToken) => {
-            if(error){
-                res.status(401).json({message: `tampered token. invalid creds.`})
-            }
-            else{
-                res.decodeJwt = decodedToken;
-                next();
-            }
-        })
-    }
-    else{
-      res.status(401).json({ you: 'shall not pass!' });
-    }
-} 
+  if (token) {
+    jwt.verify(token, secret, (err, decodedToken) => {
+      if(err) {
+        res.status(401).json('Unauthorized')
+      } else {
+        req.decodedJwt = decodedToken;
+        next();
+      }
+    });
+  } else {
+    res.status(401).json({ you: 'failed' });
+  }
+};

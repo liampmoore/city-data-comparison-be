@@ -25,7 +25,7 @@ server.use(helmet());
 server.use(cors());
 server.use(express.json());
 server.use(passport.initialize());
-server.use(passport.session());
+
 
 // server.use('/uploads', express.static('uploads'));
 server.use('/api/auth', authRouter);

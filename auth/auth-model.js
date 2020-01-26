@@ -29,7 +29,7 @@ function findById(id) {
         .first()
 }
 function remove(id) {
-    return db('auth')
+    return db('users')
     .where({ id })
     .first()
     .del();
