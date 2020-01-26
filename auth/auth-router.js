@@ -1,13 +1,16 @@
 
 const router = require('express').Router();
 const bcrypt = require('bcryptjs');
-const secrets = require('../config/secrets');
+const jwt = require('jsonwebtoken');
+const secret = require('../config/secrets');
 const passport = require('passport');
 const validator = require('password-validator')
 const Users = require('./auth-model');
 
+
 router.post('/register',  (req, res) => {
   let user = req.body;
+  console.log(user)
   var schema = new validator();
 
   schema
@@ -30,11 +33,13 @@ router.post('/register',  (req, res) => {
   user.password = hash;
   Users.add(user)
     .then(saved => {
-     req.session.username = saved.username;
-     res.status(201).json(saved)
+    const token = generateToken(saved)
+     res.status(201).json(token)
+     
     })
     .catch(err => {
       res.status(500).json(err)
+      console.log(err, 'err')
     })
   // implement registration
 });
@@ -46,9 +51,9 @@ router.post('/login', (req, res) => {
     .first()
     .then(user => {
       if (user && bcrypt.compareSync(password, user.password)) {
-        req.session.username = user.username; 
+       const token = generateToken(user) 
         res.status(200).json({
-          message: `Welcome ${user.username}!`
+          message: `Welcome ${user.username}!`, token
         });
       } else {
         res.status(401).json({message: "Invalid Credentials"})
@@ -57,32 +62,35 @@ router.post('/login', (req, res) => {
 
 });
 
-router.get("/logout", (req, res) => {
-  if (req.session) {
-    req.session.destroy(error => {
-      if (error) {
-        res
-          .status(500)
-          .json({
-            message:
-              "Failed to Logout"
-          });
+
+router.delete('/:id', (req, res) => {
+  Users.remove(req.params.id)
+  .then(user => {
+      console.log(user)
+      if (!user) {
+          res.status(404).json({message: "No user exists by that ID!"})
       } else {
-        res.status(200).json({ message: "logged out successfully" });
+          res.status(200).json({message: "deleted"})
       }
-    });
-  } else {
-    res.status(200).json({ message: "Bye, Have a good time" });
-  }
-});
+  })
+  .catch(err => {
+      console.log(err)
+      res.status(500).json(err)
+  })
+})
 
 router.get("/login/google", passport.authenticate("google", {
   scope: ['profile']
 }));
 
 router.get("/login/google/redirect", passport.authenticate("google"), (req, res) => {
-  res.redirect("https://www.citrics.io");
-  res.json(req.user)
+  //Add /callback after .io when you have component
+  const token = generateToken(req.user);
+  
+  console.log(req.user);
+  res.redirect(`https://citrics.io/callback?jwt=${token}&user=${JSON.stringify(req.user)}`);
+  
+
 })
 
 router.get("/login/linkedin", passport.authenticate("linkedin", {
@@ -90,8 +98,10 @@ router.get("/login/linkedin", passport.authenticate("linkedin", {
 }));
 
 router.get("/login/linkedin/redirect", passport.authenticate("linkedin"), (req, res) => {
-  res.redirect("https://www.citrics.io"); 
-  res.json(req.user)
+  const token = generateToken(req.user);
+
+  res.redirect(`https://www.citrics.io/callback?jwt=${token}&user=${JSON.stringify(req.user)}`);
+ 
 })
 
 router.get("/login/facebook", passport.authenticate("facebook", {
@@ -100,10 +110,21 @@ router.get("/login/facebook", passport.authenticate("facebook", {
 }));
 
 router.get("/login/facebook/redirect", passport.authenticate("facebook"), (req, res) => {
-  res.redirect("https://www.citrics.io"); 
-  res.json(req.user)
+  const token = generateToken(req.user);
+
+  res.redirect(`https://www.citrics.io/callback?jwt=${token}&user=${JSON.stringify(req.user)}`); 
+  
 })
 
-
+function generateToken(user) {
+  const payload = {
+    username: user.username,
+    
+  };
+  const options = {
+    expiresIn: "1d"
+  };
+  return jwt.sign(payload, secret.jwtSecret, options);
+}
 
 module.exports = router;

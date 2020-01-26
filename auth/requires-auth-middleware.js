@@ -1,23 +1,20 @@
-const bcrypt = require('bcryptjs')
+const jwt = require('jsonwebtoken');
+const secrets = require('../config/secrets');
 
-const Users = require('./auth-model');
 module.exports = (req, res, next) => {
-    let { username, password } = req.headers;
-    if(username && password) {
-        Users.findBy({ username })
-        .first()
-        .then(user => {
-            if (user && bcrypt.compareSync(password, user.password)){
-                next();
-            } else {
-                res.status(401).json({message: 'invalid credentials'})
-            }
-        })
-        .catch(error => {
-            console.log(error)
-            res.status(500).json({error: 'error'})
-        })
-    } else {
-        res.status(400).json({ message: 'provide credentials'})
-    }
-} 
+  const token = req.headers.authorization;
+  const secret = secrets.jwtSecret;
+
+  if (token) {
+    jwt.verify(token, secret, (err, decodedToken) => {
+      if(err) {
+        res.status(401).json('Unauthorized')
+      } else {
+        req.decodedJwt = decodedToken;
+        next();
+      }
+    });
+  } else {
+    res.status(401).json({ you: 'failed' });
+  }
+};
