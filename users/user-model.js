@@ -24,19 +24,19 @@ function updateUser(id, changes) {
 }
 
 function findUserById(id) {
-  return db('users as u')
-    .join('users_image as i ', 'u.id', 'i.users_id')
-    .select(
-      'u.id',
-      'u.username',
-      'u.first_name',
-      'u.last_name',
-      'u.email',
-      'u.city',
-      'u.state',
-      'i.userimage'
-    )
-    .where('u.id', id)
+  return db('users')
+    // .join('users_image as i ', 'u.id', 'i.users_id')
+    // .select(
+    //   'u.id',
+    //   'u.username',
+    //   'u.first_name',
+    //   'u.last_name',
+    //   'u.email',
+    //   'u.city',
+    //   'u.state',
+    //   'i.userimage'
+    // )
+    .where({id})
 }
 
 function addImage(image) {
