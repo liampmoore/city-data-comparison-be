@@ -32,15 +32,15 @@ exports.up = function(knex) {
       users_cities.integer('city_id')
       .notNullable()
     })
-    .createTable('users_image', users_image => {
-      users_image.increments();
-      users_image.integer('users_id')
+    .createTable('usersimage', usersimage => {
+      usersimage.increments();
+      usersimage.integer('users_id')
       .references('id')
       .inTable('users')
       .notNullable()
       .onDelete('CASCADE')
       .onUpdate('CASCADE');
-      users_image.string('userimage');
+      usersimage.string('userimage');
     })
   };
   

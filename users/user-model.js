@@ -7,12 +7,13 @@ module.exports = {
   findById,
   addImage, 
   editImage,
+  findUsersImage,
   findUserById,
   updateUser
 };
 
 function editImage(id, changes) {
-  return db('users_image')
+  return db('usersimage')
     .where({id})
     .update(changes, '*');
 }
@@ -25,22 +26,16 @@ function updateUser(id, changes) {
 
 function findUserById(id) {
   return db('users')
-    // .join('users_image as i ', 'u.id', 'i.users_id')
-    // .select(
-    //   'u.id',
-    //   'u.username',
-    //   'u.first_name',
-    //   'u.last_name',
-    //   'u.email',
-    //   'u.city',
-    //   'u.state',
-    //   'i.userimage'
-    // )
     .where({id})
 }
 
+function findUsersImage(users_id) {
+  return db('usersimage')
+  .where('users_id', users_id)
+}
+
 function addImage(image) {
-  return db('users_image').insert(image)
+  return db('usersimage').insert(image)
 }
 
 //GET a users favorited cities based on users_id

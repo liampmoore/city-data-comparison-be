@@ -50,7 +50,7 @@ router.get('/profile/:id', (req, res) => {
  
 
 
-router.post('/', upload.single('userimage'), (req, res, next) => {
+router.post('/', upload.single('usersimage'), (req, res, next) => {
 
     console.log(req.file);
     const userimg = ({users_id: req.body.users_id, userimage: req.file.path})
@@ -90,6 +90,16 @@ router.put('/profile/:id/image', upload.single('userimage'), (req, res, next) =>
             message: 'Failed to update!', err
         })
     })
+  })
+
+  router.get('/profile/:id/image', (req, res) => {
+    Users.findUsersImage(req.params.id)
+        .then(image => {
+            res.status(201).json(image)
+        })
+        .catch(err => {
+            res.status(401).json({message: 'Unable to find image', err})
+        })
   })
 
 router.put('/:id/profile', (req,res) => {
