@@ -16,9 +16,9 @@
 
 # Users - /api/users 
 ## User 
-#### GET users information by users ID - https://citrics-staging.herokuapp.com/api/users/:id/profile
+#### GET users information by users ID - https://citrics-staging.herokuapp.com/api/users/profile/:id
 Give user id in url
-#### PUT users information by users ID - https://citrics-staging.herokuapp.com/api/users/:id/profile
+#### PUT users information by users ID - https://citrics-staging.herokuapp.com/api/users/profile/:id
 Give user id in url
 
 
@@ -29,7 +29,10 @@ Give user id in url
 ## User's profile image
 #### POST image for user  - https://citrics-staging.herokuapp.com/api/users
 Requires users ID and a .jpeg or .png file
-
+#### DELETE image for user - https://citrics-staging.herokuapp.com/api/users/profile/:id/image
+Requires users ID 
+#### GET image for user - https://citrics-staging.herokuapp.com/api/users/profile/:id/image
+Requires users ID
 
 
 # Preferences - /api/preferences 
