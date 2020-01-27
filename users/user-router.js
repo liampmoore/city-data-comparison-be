@@ -50,7 +50,7 @@ router.get('/profile/:id', (req, res) => {
  
 
 
-router.post('/', upload.single('usersimage'), (req, res, next) => {
+router.post('/', upload.single('userimage'), (req, res, next) => {
 
     console.log(req.file);
     const userimg = ({users_id: req.body.users_id, userimage: req.file.path})
