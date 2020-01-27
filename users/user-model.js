@@ -27,23 +27,9 @@ function updateUser(id, changes) {
     .update(changes, '*');
 }
 
-function findUserById(user) {
-  return db('users as u')
-    .join('usersimage as i', 'u.id', 'i.users_id')
-    .select(
-      'u.id',
-      'u.googleid',
-      'u.linkedinid',
-      'u.facebookid',
-      'u.first_name',
-      'u.last_name',
-      'u.email',
-      'u.city',
-      'u.state ',
-      'i.userimage',
-      'i.users_id'
-    )
-    .where({user})
+function findUserById(id) {
+  return db('users')
+    .where({id})
 }
 
 function findUsersImage(users_id) {
@@ -70,7 +56,7 @@ function getFavs(userid) {
 
 //POST a favorite using a users_id in url and city_id in the body of the request
 async function addFav(city, userid) {
-  const [id] = await db("users_cities").insert([{city_id: city}, {users_id: userid}]);
+  const [id] = await db("users_cities").insert({city_id: city, users_id: userid});
   return findById(id);
 }
 
