@@ -9,8 +9,11 @@ module.exports = {
   editImage,
   findUsersImage,
   findUserById,
-  updateUser
+  updateUser,
+  deleteImage
 };
+
+
 
 function editImage(id, changes) {
   return db('usersimage')
@@ -32,6 +35,13 @@ function findUserById(id) {
 function findUsersImage(users_id) {
   return db('usersimage')
   .where('users_id', users_id)
+}
+
+function deleteImage(id) {
+  const usersimage = findUsersImage(id)
+  return db('usersimage')
+    .where('users_id', id)
+    .del()
 }
 
 function addImage(image) {

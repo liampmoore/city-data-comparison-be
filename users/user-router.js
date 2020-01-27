@@ -76,31 +76,25 @@ router.put('/profile/:id', (req,res) => {
     })
 })
 
-router.put('/profile/:id/image', upload.single('userimage'), (req, res, next) => {
-    console.log(req.file);
-    const id = req.params.id
-    const userimg = ({users_id: req.body.users_id, userimage: req.file.filename})
-
-    Users.editImage(id, userimg)
-    .then(user => {
-        res.status(201).json(user)
-    })
-    .catch(err => {
-        res.status(401).json({
-            message: 'Failed to update!', err
-        })
-    })
-  })
-
-  router.get('/profile/:id/image', (req, res) => {
-    Users.findUsersImage(req.params.id)
+router.delete('/profile/:id/image', (req, res) => {
+    Users.deleteImage(req.params.id)
         .then(image => {
             res.status(201).json(image)
         })
         .catch(err => {
-            res.status(401).json({message: 'Unable to find image', err})
+            res.status(401).json({message: 'Image deleted', err})
         })
-  })
+})
+
+router.get('/profile/:id/image', (req, res) => {
+  Users.findUsersImage(req.params.id)
+      .then(image => {
+          res.status(201).json(image)
+      })
+      .catch(err => {
+          res.status(401).json({message: 'Unable to find image', err})
+      })
+})
 
 router.put('/:id/profile', (req,res) => {
     Users.updateUser(req.params.id, req.body)
