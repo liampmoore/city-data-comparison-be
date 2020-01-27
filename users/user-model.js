@@ -27,9 +27,23 @@ function updateUser(id, changes) {
     .update(changes, '*');
 }
 
-function findUserById(id) {
-  return db('users')
-    .where({id})
+function findUserById(user) {
+  return db('users as u')
+    .join('usersimage as i', 'u.id', 'i.users_id')
+    .select(
+      'u.id',
+      'u.googleid',
+      'u.linkedinid',
+      'u.facebookid',
+      'u.first_name',
+      'u.last_name',
+      'u.email',
+      'u.city',
+      'u.state ',
+      'i.userimage',
+      'i.users_id'
+    )
+    .where({user})
 }
 
 function findUsersImage(users_id) {
