@@ -108,7 +108,8 @@ router.get("/favs/:id", (req, res) => {
 
 //POST a favorite using a users_id in url and city_id in the body of the request
 router.post("/favs/:id", (req, res) => {
-    Users.addFav(req.body.city_id, req.params.id)
+    console.log(req.body.city_id, parseInt(req.params.id))
+    Users.addFav(req.body.city_id, parseInt(req.params.id))
     .then(fav => {
         res.json(fav);
     })

@@ -11,8 +11,6 @@ module.exports = {
   updateUser
 };
 
-<<<<<<< HEAD
-=======
 function editImage(id, changes) {
   return db('users_image')
     .where({id})
@@ -40,7 +38,6 @@ function findUserById(id) {
     )
     .where('u.id', id)
 }
->>>>>>> f685762adf264e0f79d6c03fecde6ad03f07c503
 
 function addImage(image) {
   return db('users_image').insert(image)
@@ -54,7 +51,7 @@ function getFavs(userid) {
 
 //POST a favorite using a users_id in url and city_id in the body of the request
 async function addFav(city, userid) {
-  const [id] = await db("users_cities").insert([{city_id: city}, {users_id: userid}]);
+  const [id] = await db("users_cities").insert({city_id: city, users_id: userid});
   return findById(id);
 }
 
