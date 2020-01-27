@@ -36,7 +36,7 @@ const upload = multer({
     fileFilter: fileFilter
   });
 
-router.get('/:id/profile', (req, res) => {
+router.get('/profile/:id', (req, res) => {
     console.log(req.params.id)
   Users.findUserById(req.params.id)
   .then(user => {
@@ -50,7 +50,7 @@ router.get('/:id/profile', (req, res) => {
  
 
 
-router.post('/', upload.single('userimage'), (req, res, next) => {
+router.post('/', upload.single('usersimage'), (req, res, next) => {
 
     console.log(req.file);
     const userimg = ({users_id: req.body.users_id, userimage: req.file.path})
@@ -66,21 +66,35 @@ router.post('/', upload.single('userimage'), (req, res, next) => {
     })
 })
 
-router.put('/:id/profile/image', upload.single('userimage'), (req, res, next) => {
-    console.log(req.file);
-    const id = req.params.id
-    const userimg = ({users_id: req.body.users_id, userimage: req.file.filename})
-
-    Users.editImage(id, userimg)
+router.put('/profile/:id', (req,res) => {
+    Users.updateUser(req.params.id, req.body)
     .then(user => {
-        res.status(201).json(user)
+        res.status(200).json(user);
     })
     .catch(err => {
-        res.status(401).json({
-            message: 'Failed to update!', err
-        })
+        res.status(500).json({message: 'Unable to update', error: err})
     })
-  })
+})
+
+router.delete('/profile/:id/image', (req, res) => {
+    Users.deleteImage(req.params.id)
+        .then(image => {
+            res.status(201).json(image)
+        })
+        .catch(err => {
+            res.status(401).json({message: 'Image deleted', err})
+        })
+})
+
+router.get('/profile/:id/image', (req, res) => {
+  Users.findUsersImage(req.params.id)
+      .then(image => {
+          res.status(201).json(image)
+      })
+      .catch(err => {
+          res.status(401).json({message: 'Unable to find image', err})
+      })
+})
 
 router.put('/:id/profile', (req,res) => {
     Users.updateUser(req.params.id, req.body)
