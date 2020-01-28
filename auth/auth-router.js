@@ -52,7 +52,7 @@ router.post('/login', (req, res) => {
     .then(user => {
       if (user && bcrypt.compareSync(password, user.password)) {
        const token = generateToken(user) 
-       const id = user.id
+       delete user.password;
         res.status(200).json({
           user, token
         });
