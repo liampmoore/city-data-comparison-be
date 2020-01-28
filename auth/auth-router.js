@@ -35,7 +35,7 @@ router.post('/register',  (req, res) => {
     .then(saved => {
     delete saved.password;
     const token = generateToken(saved);
-     res.status(201).json({saved, token: token})
+     res.status(201).json({user: saved, token: token})
      
     })
     .catch(err => {
