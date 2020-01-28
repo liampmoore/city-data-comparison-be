@@ -69,8 +69,8 @@ function findById(id) {
 
 
 //DELETE the favorite based on the id of the table entry
-function removeFav(id) {
+function removeFav(cityid, userid) {
   return db("users_cities")
-    .where({ id })
+    .where({ city_id: cityid, users_id: userid })
     .del();
 }

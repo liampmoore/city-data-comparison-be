@@ -135,8 +135,8 @@ router.post("/favs/:id", (req, res) => {
 
 
 //DELETE the favorite based on the id of the table entry
-router.delete("/favs", (req, res) => {
-    Users.removeFav(req.body.id)
+router.delete("/favs/:id", (req, res) => {
+    Users.removeFav(req.body.city_id, req.params.id)
     .then(fav => {
       res.json(fav);
     })

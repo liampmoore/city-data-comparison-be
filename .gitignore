@@ -79,6 +79,7 @@ yarn.lock
 
 # Next.js build output
 .next
+./database/auth.db3
 
 # Nuxt.js build / generate output
 .nuxt
