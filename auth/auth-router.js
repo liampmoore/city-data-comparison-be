@@ -33,8 +33,9 @@ router.post('/register',  (req, res) => {
   user.password = hash;
   Users.add(user)
     .then(saved => {
-    const token = generateToken(saved)
-     res.status(201).json(token)
+    delete saved.password;
+    const token = generateToken(saved);
+     res.status(201).json({saved, token: token})
      
     })
     .catch(err => {
