@@ -11,30 +11,31 @@ const Users = require('./auth-model');
 router.post('/register',  (req, res) => {
   let user = req.body;
   console.log(user)
-  var schema = new validator();
+  // var schema = new validator();
 
-  schema
-    .is().min(8)                                    
-    .is().max(100)                                  
-    .has().uppercase()                              
-    .has().lowercase()                              
-    .has().digits()            
-    .has().symbols()                     
-    .has().not().spaces()                           
+  // schema
+  //   .is().min(8)                                    
+  //   .is().max(100)                                  
+  //   .has().uppercase()                              
+  //   .has().lowercase()                              
+  //   .has().digits()            
+  //   .has().symbols()                     
+  //   .has().not().spaces()                           
 
-   if ( !schema.validate (user.password )){
-     res.status(500).json({
-       message: 'Your password must be 8 or more characters long, should contain at least 1 Uppercase, 1 Lowercase, 1 Numeric, and 1 special character'
-     })
-   } 
+  //  if ( !schema.validate (user.password )){
+  //    res.status(500).json({
+  //      message: 'Your password must be 8 or more characters long, should contain at least 1 Uppercase, 1 Lowercase, 1 Numeric, and 1 special character'
+  //    })
+  //  } 
 
 
   const hash = bcrypt.hashSync(user.password,10);
   user.password = hash;
   Users.add(user)
     .then(saved => {
-    const token = generateToken(saved)
-     res.status(201).json(token)
+    delete saved.password;
+    const token = generateToken(saved);
+     res.status(201).json({user: saved, token: token})
      
     })
     .catch(err => {
@@ -52,9 +53,9 @@ router.post('/login', (req, res) => {
     .then(user => {
       if (user && bcrypt.compareSync(password, user.password)) {
        const token = generateToken(user) 
-       const id = user.id
+       delete user.password;
         res.status(200).json({
-          message: `Welcome ${user.username}!`, token, id
+          user, token
         });
       } else {
         res.status(401).json({message: "Invalid Credentials"})

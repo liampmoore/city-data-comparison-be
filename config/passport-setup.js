@@ -36,7 +36,7 @@ passport.use(
                 // if not, create user in our db
                 User.add({
                     googleid: profile.id,
-                    username: profile.displayName + ' google',
+                    username: profile.id + ' google',
                     // thumbnail: profile._json.image.url
                 }).then((newUser) => {
                     console.log('created new user: ', newUser);
@@ -66,7 +66,7 @@ passport.use(
                 // if not, create user in our db
                 User.add({
                     linkedinid: profile.id,
-                    username: profile.displayName + ' linkedin',
+                    username: profile.id + ' linkedin',
                     // thumbnail: profile._json.image.url
                 }).then((newUser) => {
                     console.log('created new user: ', newUser);
@@ -97,7 +97,7 @@ passport.use(
                 // if not, create user in our db
                 User.add({
                     facebookid: profile.id,
-                    username: profile.displayName + ' facebook',
+                    username: profile.id + ' facebook',
                     // thumbnail: profile._json.image.url
                 }).then((newUser) => {
                     console.log('created new user: ', newUser);
