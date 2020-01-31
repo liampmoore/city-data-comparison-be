@@ -31,11 +31,12 @@ router.post('/register',  (req, res) => {
 
   const hash = bcrypt.hashSync(user.password,10);
   user.password = hash;
-  Users.add(user).first()
+  Users.add(user)
     .then(saved => {
-    delete saved.password;
-    const token = generateToken(saved);
-     res.status(201).json({user: saved, token: token})
+      const newUser = saved[0]
+    delete newUser.password;
+    const token = generateToken(newUser);
+     res.status(201).json({user: newUser, token: token})
      
     })
     .catch(err => {
