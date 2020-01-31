@@ -40,6 +40,7 @@ router.get('/profile/:id', (req, res) => {
     console.log(req.params.id)
   Users.findUserById(req.params.id)
   .then(user => {
+      delete user.password;
       console.log(user)
       res.status(201).json(user)
   })
@@ -69,6 +70,7 @@ router.post('/', upload.single('userimage'), (req, res, next) => {
 router.put('/profile/:id', (req,res) => {
     Users.updateUser(req.params.id, req.body)
     .then(user => {
+        delete user.password;
         res.status(200).json(user);
     })
     .catch(err => {
@@ -99,6 +101,7 @@ router.get('/profile/:id/image', (req, res) => {
 router.put('/:id/profile', (req,res) => {
     Users.updateUser(req.params.id, req.body)
     .then(user => {
+        delete user.password;
         res.status(200).json(user);
     })
     .catch(err => {
