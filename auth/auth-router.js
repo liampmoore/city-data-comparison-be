@@ -10,7 +10,7 @@ const Users = require('./auth-model');
 
 router.post('/register',  (req, res) => {
   let user = req.body;
-  console.log(user)
+
   // var schema = new validator();
 
   // schema
@@ -69,7 +69,6 @@ router.post('/login', (req, res) => {
 router.delete('/:id', (req, res) => {
   Users.remove(req.params.id)
   .then(user => {
-      console.log(user)
       if (!user) {
           res.status(404).json({message: "No user exists by that ID!"})
       } else {
@@ -90,7 +89,7 @@ router.get("/login/google/redirect", passport.authenticate("google"), (req, res)
   //Add /callback after .io when you have component
   const token = generateToken(req.user);
   
-  console.log(req.user);
+
   res.redirect(`https://citrics.io/callback?jwt=${token}&user=${JSON.stringify(req.user)}`);
   
 
