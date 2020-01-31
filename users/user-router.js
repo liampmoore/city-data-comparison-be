@@ -125,7 +125,7 @@ router.post("/favs/:id", (req, res) => {
     console.log(req.body.city_id, parseInt(req.params.id))
     Users.addFav(req.body.city_id, parseInt(req.params.id))
     .then(fav => {
-        res.json(fav);
+        res.json(fav[0]);
     })
     .catch(err => {
         console.log(err);
