@@ -37,7 +37,6 @@ const upload = multer({
   });
 
 router.get('/profile/:id', (req, res) => {
-    console.log(req.params.id)
   Users.findUserById(req.params.id)
   .then(user => {
       delete user.password;
@@ -52,8 +51,6 @@ router.get('/profile/:id', (req, res) => {
 
 
 router.post('/', upload.single('userimage'), (req, res, next) => {
-
-    console.log(req.file);
     const userimg = ({users_id: req.body.users_id, userimage: req.file.path})
 
     Users.addImage(userimg)
@@ -125,7 +122,6 @@ router.get("/favs/:id", (req, res) => {
 
 //POST a favorite using a users_id in url and city_id in the body of the request
 router.post("/favs/:id", (req, res) => {
-    console.log(req.body.city_id, parseInt(req.params.id))
     Users.addFav(req.body.city_id, parseInt(req.params.id))
     .then(fav => {
         res.json(fav[0]);
