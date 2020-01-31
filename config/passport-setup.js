@@ -40,7 +40,7 @@ passport.use(
                     // thumbnail: profile._json.image.url
                 }).then((newUser) => {
                     console.log('created new user: ', newUser);
-                    done(null, newUser);
+                    done(null, newUser[0]);
                 });
             }
         });
@@ -70,7 +70,7 @@ passport.use(
                     // thumbnail: profile._json.image.url
                 }).then((newUser) => {
                     console.log('created new user: ', newUser);
-                    done(null, newUser);
+                    done(null, newUser[0]);
                 });
             }
         });
@@ -101,7 +101,7 @@ passport.use(
                     // thumbnail: profile._json.image.url
                 }).then((newUser) => {
                     console.log('created new user: ', newUser);
-                    done(null, newUser);
+                    done(null, newUser[0]);
                 });
             }
         });
