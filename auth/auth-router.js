@@ -31,7 +31,7 @@ router.post('/register',  (req, res) => {
 
   const hash = bcrypt.hashSync(user.password,10);
   user.password = hash;
-  Users.add(user)
+  Users.add(user).first()
     .then(saved => {
     delete saved.password;
     const token = generateToken(saved);
