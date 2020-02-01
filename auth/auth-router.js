@@ -121,6 +121,7 @@ router.get("/login/facebook/redirect", passport.authenticate("facebook"), (req, 
 function generateToken(user) {
   const payload = {
     username: user.username,
+    id: user.id,
     
   };
   const options = {

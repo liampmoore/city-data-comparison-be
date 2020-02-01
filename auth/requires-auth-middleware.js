@@ -9,8 +9,11 @@ module.exports = (req, res, next) => {
     jwt.verify(token, secret, (err, decodedToken) => {
       if(err) {
         res.status(401).json('Unauthorized')
+      } if (req.params.id && req.params.id !== decodedToken.id) {
+        res.status(401).json({error: "you cannot edit other users"})
       } else {
         req.decodedJwt = decodedToken;
+        console.log(decodedToken)
         next();
       }
     });
