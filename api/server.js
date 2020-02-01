@@ -27,7 +27,8 @@ server.use(passport.initialize());
 
 server.use('/uploads', express.static('uploads'));
 server.use('/api/auth', authRouter);
-server.use('/api/users', authenticate, userRouter);
+server.use('/api/users', userRouter);
+// server.use('/api/users', authenticate, userRouter);
 server.use('/api/preferences', preferenceRouter)
 
 
