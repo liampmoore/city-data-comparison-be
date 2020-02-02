@@ -12,6 +12,8 @@ module.exports = (req, res, next) => {
       } if (req.params.id && req.params.id !== decodedToken.id) {
         res.status(401).json({error: "you cannot edit other users"})
       } else {
+        console.log("req.params.id", req.params.id)
+        console.log("token id", decodedToken.id)
         req.decodedJwt = decodedToken;
         console.log(decodedToken)
         next();
