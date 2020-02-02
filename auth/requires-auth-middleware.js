@@ -10,8 +10,6 @@ module.exports = (req, res, next) => {
       if(err) {
         res.status(401).json('Unauthorized')
       } else {
-        console.log("req.params.id", req.params.id)
-        console.log("token id", decodedToken.id)
         req.decodedJwt = decodedToken;
         console.log(decodedToken)
         next();
