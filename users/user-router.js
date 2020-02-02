@@ -37,15 +37,19 @@ const upload = multer({
   });
 
 router.get('/profile/:id', (req, res) => {
-  Users.findUserById(req.params.id)
-  .then(user => {
-      delete user.password;
-      console.log(user)
-      res.status(201).json(user)
-  })
-  .catch(err => {
-      res.status(401).json({message: 'Unable to find user', error: err})
-  });
+    console.log("decoded jwt in router", req.decodedJwt)
+    if (req.params.id !== req.decodedJwt.id) {
+        res.status(401).json({message: 'You cannot access another user', error: err})
+    } else {
+    Users.findUserById(req.params.id)
+    .then(user => {
+        delete user.password;
+        console.log(user)
+        res.status(201).json(user)
+    })
+    .catch(err => {
+        res.status(401).json({message: 'Unable to find user', error: err})
+    })};
 })
  
 
