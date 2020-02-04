@@ -37,22 +37,23 @@ const upload = multer({
   });
 
 router.get('/profile/:id', (req, res) => {
-    console.log(req.params.id)
-  Users.findUserById(req.params.id)
-  .then(user => {
-      console.log(user)
-      res.status(201).json(user)
-  })
-  .catch(err => {
-      res.status(401).json({message: 'Unable to find user', error: err})
-  });
+    if (Number(req.params.id) !== Number(req.decodedJwt.id)) {
+        res.status(401).json({message: 'You cannot access another user'})
+    } else {
+    Users.findUserById(req.params.id)
+    .then(user => {
+        delete user.password;
+        console.log(user)
+        res.status(201).json(user)
+    })
+    .catch(err => {
+        res.status(401).json({message: 'Unable to find user', error: err})
+    })};
 })
  
 
 
 router.post('/', upload.single('userimage'), (req, res, next) => {
-
-    console.log(req.file);
     const userimg = ({users_id: req.body.users_id, userimage: req.file.path})
 
     Users.addImage(userimg)
@@ -67,49 +68,66 @@ router.post('/', upload.single('userimage'), (req, res, next) => {
 })
 
 router.put('/profile/:id', (req,res) => {
+    if (Number(req.params.id) !== Number(req.decodedJwt.id)) {
+        res.status(401).json({message: 'You cannot edit another user'})
+    } else {
     Users.updateUser(req.params.id, req.body)
     .then(user => {
+        delete user.password;
         res.status(200).json(user);
     })
     .catch(err => {
         res.status(500).json({message: 'Unable to update', error: err})
-    })
+    })}
 })
 
 router.delete('/profile/:id/image', (req, res) => {
+    if (Number(req.params.id) !== Number(req.decodedJwt.id)) {
+        res.status(401).json({message: 'You cannot edit another user'})
+    } else {
     Users.deleteImage(req.params.id)
         .then(image => {
             res.status(201).json(image)
         })
         .catch(err => {
             res.status(401).json({message: 'Image deleted', err})
-        })
+        })}
 })
 
 router.get('/profile/:id/image', (req, res) => {
+    if (Number(req.params.id) !== Number(req.decodedJwt.id)) {
+        res.status(401).json({message: 'You cannot access another user'})
+    } else {
   Users.findUsersImage(req.params.id)
       .then(image => {
           res.status(201).json(image)
       })
       .catch(err => {
           res.status(401).json({message: 'Unable to find image', err})
-      })
+      })}
 })
 
 router.put('/:id/profile', (req,res) => {
+    if (Number(req.params.id) !== Number(req.decodedJwt.id)) {
+        res.status(401).json({message: 'You cannot edit another user'})
+    } else {
     Users.updateUser(req.params.id, req.body)
     .then(user => {
+        delete user.password;
         res.status(200).json(user);
     })
     .catch(err => {
         res.status(500).json({message: 'Unable to update', error: err})
-    })
+    })}
 })
 
 
 
 //GET a users favorited cities based on users_id
 router.get("/favs/:id", (req, res) => {
+    if (Number(req.params.id) !== Number(req.decodedJwt.id)) {
+        res.status(401).json({message: 'You cannot access another user'})
+    } else {
     Users.getFavs(req.params.id)
     .then(favs => {
         res.json(favs);
@@ -117,32 +135,37 @@ router.get("/favs/:id", (req, res) => {
     .catch(err => {
         console.log(err);
         res.status(401).json({ message: "failed to get favs", error: err });
-    });
+    })};
 })
 
 //POST a favorite using a users_id in url and city_id in the body of the request
 router.post("/favs/:id", (req, res) => {
-    console.log(req.body.city_id, parseInt(req.params.id))
+    if (Number(req.params.id) !== Number(req.decodedJwt.id)) {
+        res.status(401).json({message: 'You cannot edit another user'})
+    } else {
     Users.addFav(req.body.city_id, parseInt(req.params.id))
     .then(fav => {
-        res.json(fav);
+        res.json(fav[0]);
     })
     .catch(err => {
         console.log(err);
         res.status(401).json({ message: "failed to add fav", error: err });
-    });
+    })};
 })
 
 
 //DELETE the favorite based on the id of the table entry
 router.delete("/favs/:id", (req, res) => {
+    if (Number(req.params.id) !== Number(req.decodedJwt.id)) {
+        res.status(401).json({message: 'You cannot access another user'})
+    } else {
     Users.removeFav(req.body.city_id, req.params.id)
     .then(fav => {
       res.json(fav);
     })
     .catch(err => {
       res.status(401).json({ message: "fav not deleted", error: err });
-    });
+    })};
 })
 
 

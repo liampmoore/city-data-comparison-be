@@ -56,8 +56,8 @@ function getFavs(userid) {
 
 //POST a favorite using a users_id in url and city_id in the body of the request
 async function addFav(city, userid) {
-  const [id] = await db("users_cities").insert({city_id: city, users_id: userid});
-  return findById(id);
+  return db("users_cities").insert({city_id: city, users_id: userid}).returning("*");
+ 
 }
 
 //helper function for a return from adding cities
