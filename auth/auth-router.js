@@ -113,9 +113,16 @@ router.get("/login/linkedin/redirect", (req, res, next) => {
 
       // Note: https://github.com/jaredhanson/passport/blob/master/lib/middleware/authenticate.js#L52
 
-      const token = generateToken(req.user);
+      req.login(user, (err) => {
+        if (err) {
+          return next(err);
+        }
+        // successRedirect
+        const token = generateToken(req.user);
       
-      res.redirect(`https://www.citrics.io/callback?jwt=${token}&user=${JSON.stringify(req.user)}`);
+       res.redirect(`https://www.citrics.io/callback?jwt=${token}&user=${JSON.stringify(req.user)}`);
+     
+        });
        
       
 
