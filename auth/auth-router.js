@@ -99,12 +99,30 @@ router.get("/login/linkedin", passport.authenticate("linkedin", {
   
 }));
 
-router.get("/login/linkedin/redirect", passport.authenticate("linkedin"), (req, res) => {
-  const token = generateToken(req.user);
+router.get("/login/linkedin/redirect", (req, res, next) => {
+    passport.authenticate('linkedin', (err, user, info) => {
+      if (err) {
+        // failureRedirect
+        return res.redirect('https://citrics.io');
+      }
 
-  res.redirect(`https://www.citrics.io/callback?jwt=${token}&user=${JSON.stringify(req.user)}`);
- 
-})
+      if (!user) {
+        // failureRedirect
+        return res.redirect('https://citrics.io');
+      }
+
+      // Note: https://github.com/jaredhanson/passport/blob/master/lib/middleware/authenticate.js#L52
+
+      const token = generateToken(req.user);
+      
+      res.redirect(`https://www.citrics.io/callback?jwt=${token}&user=${JSON.stringify(req.user)}`);
+       
+      
+
+    })(req, res, next);
+  });
+//    (req, res) => {
+//   
 
 router.get("/login/facebook", passport.authenticate("facebook", {
 //   scope: ['profile']

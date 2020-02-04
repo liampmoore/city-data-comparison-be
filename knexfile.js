@@ -1,14 +1,5 @@
 module.exports = {
-  development: {
-    client: 'sqlite3',
-    connection: { filename: './database/auth.db3' },
-    useNullAsDefault: true,
-    migrations: {
-      directory: './database/migrations',
-      tableName: 'dbmigrations',
-    },
-    seeds: { directory: './database/seeds' },
-  },
+
 
   staging: {
     client: 'postgresql',
@@ -27,6 +18,8 @@ module.exports = {
   },
   production: {
     client: "pg",
+    user: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
     connection: process.env.DATABASE_URL,
     pool: {
       min: 2,

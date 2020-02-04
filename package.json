@@ -6,7 +6,7 @@
   "scripts": {
     "server": "nodemon index.js",
     "test": "jest --watch",
-    "start": "node index.js"
+    "start": "npx knex migrate:latest --env production && node index.js"
   },
   "jest": {
     "server": "nodemon index.js",
@@ -31,9 +31,6 @@
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
-    "cleaner": "^2.0.0-alpha",
-    "cookie-session": "^1.3.3",
-    "cookie-sessions": "0.0.2",
     "cors": "^2.8.5",
     "cross-env": "^6.0.3",
     "dotenv": "^8.2.0",
@@ -48,7 +45,6 @@
     "passport-google-oauth20": "^2.0.0",
     "passport-linkedin-oauth2": "^2.0.0",
     "password-validator": "^5.0.3",
-    "pg": "^7.18.1",
-    "sqlite3": "^4.1.1"
+    "pg": "^7.18.1"
   }
 }
