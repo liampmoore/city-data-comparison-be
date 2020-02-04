@@ -1,6 +1,12 @@
 # Back-end
 
-#### https://citrics-staging.herokuapp.com/
+#### https://be.citrics.io
+
+## MiddleWare Used
+- Express
+- Cors 
+- Helmet
+- Passport.js
 
 # Auth - /api/auth
 #### POST Register  - https://citrics-staging.herokuapp.com/api/auth/register
