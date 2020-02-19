@@ -84,17 +84,16 @@ router.delete('/profile/image', (req, res) => {
         })
 })
 
-router.get('/profile/:id/image', (req, res) => {
-    if (Number(req.params.id) !== Number(req.decodedJwt.id)) {
-        res.status(401).json({message: 'You cannot access another user'})
-    } else {
-  Users.findUsersImage(req.params.id)
-      .then(image => {
-          res.status(201).json(image)
-      })
-      .catch(err => {
-          res.status(401).json({message: 'Unable to find image', err})
-      })}
+router.get('/profile/image', (req, res) => {
+    const id = req.body.user_id;
+
+    Users.findUsersImage(id)
+        .then(image => {
+            res.status(200).json(image)
+        })
+        .catch(err => {
+            res.status(500).json({ message: 'Unable to find image' })
+        })
 })
 
 router.put('/:id/profile', (req,res) => {
