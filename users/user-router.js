@@ -16,7 +16,7 @@ const storage = multer.diskStorage({
     }
   });
 
-const fileFilter = (req, file, cb) => {
+    const fileFilter = (req, file, cb) => {
     if (file.mimetype === 'image/jpeg' || file.mimetype === 'image/png') {
         cb(null, true);
     } else {
@@ -40,7 +40,7 @@ router.get('/profile', (req, res) => {
             delete user.password;
             res.status(200).json(user)
         })
-        .catch(err => {
+        .catch(error => {
             res.status(400).json({ message: 'Unable to find user' })
         });
 })
@@ -48,31 +48,28 @@ router.get('/profile', (req, res) => {
 
 
 router.post('/', upload.single('userimage'), (req, res, next) => {
-    const userimg = ({users_id: req.body.users_id, userimage: req.file.path})
+    const userimg = ({users_id: req.body.user_id, userimage: req.file.path})
 
     Users.addImage(userimg)
-    .then(user => {
-        res.status(201).json(user)
-    })
-    .catch(err => {
-        res.status(401).json({
-            message: 'Failed to update!', err
+        .then(user => {
+            res.status(201).json(user)
         })
-    })
+        .catch(err => {
+            res.status(500).json({ message: 'Failed to post' })
+        })
 })
 
-router.put('/profile/:id', (req,res) => {
-    if (Number(req.params.id) !== Number(req.decodedJwt.id)) {
-        res.status(401).json({message: 'You cannot edit another user'})
-    } else {
-    Users.updateUser(req.params.id, req.body)
+router.put('/profile', (req,res) => {
+    const id = req.body.user_id;
+
+    Users.updateUser(id, req.body)
     .then(user => {
         delete user.password;
         res.status(200).json(user);
     })
     .catch(err => {
-        res.status(500).json({message: 'Unable to update', error: err})
-    })}
+        res.status(500).json({ message: 'Unable to update' })
+    })
 })
 
 router.delete('/profile/:id/image', (req, res) => {
