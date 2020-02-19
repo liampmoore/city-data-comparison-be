@@ -3,10 +3,6 @@ const router = require('express').Router();
 const multer = require('multer');
 const db = require("../database/dbConfig.js");
 
-const bcrypt = require('bcryptjs');
-// const secrets = require('../config/secrets');
-// const passport = require('passport');
-// const validator = require('password-validator')
 
 const Users = require('./user-model');
 const Preferences = require('../preferences/preference-model.js')
@@ -34,21 +30,19 @@ const upload = multer({
       fileSize: 1024 * 1024 * 5
     },
     fileFilter: fileFilter
-  });
+});
 
-router.get('/profile/:id', (req, res) => {
-    if (Number(req.params.id) !== Number(req.decodedJwt.id)) {
-        res.status(401).json({message: 'You cannot access another user'})
-    } else {
-    Users.findUserById(req.params.id)
-    .then(user => {
-        delete user.password;
-        console.log(user)
-        res.status(201).json(user)
-    })
-    .catch(err => {
-        res.status(401).json({message: 'Unable to find user', error: err})
-    })};
+router.get('/profile', (req, res) => {
+    const id = req.body.user_id;
+
+    Users.findUserById(id)
+        .then(user => {
+            delete user.password;
+            res.status(200).json(user)
+        })
+        .catch(err => {
+            res.status(400).json({ message: 'Unable to find user' })
+        });
 })
  
 
