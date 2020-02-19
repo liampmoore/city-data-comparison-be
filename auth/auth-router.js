@@ -11,39 +11,18 @@ const Users = require('./auth-model');
 router.post('/register',  (req, res) => {
   let user = req.body;
 
-  // var schema = new validator();
-
-  // schema
-  //   .is().min(8)                                    
-  //   .is().max(100)                                  
-  //   .has().uppercase()                              
-  //   .has().lowercase()                              
-  //   .has().digits()            
-  //   .has().symbols()                     
-  //   .has().not().spaces()                           
-
-  //  if ( !schema.validate (user.password )){
-  //    res.status(500).json({
-  //      message: 'Your password must be 8 or more characters long, should contain at least 1 Uppercase, 1 Lowercase, 1 Numeric, and 1 special character'
-  //    })
-  //  } 
-
-
   const hash = bcrypt.hashSync(user.password,10);
   user.password = hash;
   Users.add(user)
-    .then(saved => {
-      const newUser = saved[0]
-    delete newUser.password;
-    const token = generateToken(newUser);
-     res.status(201).json({user: newUser, token: token})
-     
+    .first()
+    .then(newUser => {
+      delete newUser.password;
+      const token = generateToken(newUser);
+      res.status(201).json({user: newUser, token: token})
     })
     .catch(err => {
-      res.status(500).json(err)
-      console.log(err, 'err')
+      res.status(500).json({ message: 'Internal server error.'})
     })
-  // implement registration
 });
 
 router.post('/login', (req, res) => {
