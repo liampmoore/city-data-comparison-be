@@ -6,42 +6,69 @@ const secret = require('../config/secrets');
 const passport = require('passport');
 const validator = require('password-validator')
 const Users = require('./auth-model');
+//Middleware
+const user_body = require('./user-body-middleware');
 
 
-router.post('/register',  (req, res) => {
+router.post('/register', user_body,  (req, res) => {
   let user = req.body;
+  const username = req.body.userman;
+  const password = req.body.password;
+  if (user.password) {
+    const hash = bcrypt.hashSync(user.password, 10);
+    user.password = hash;
+  }
 
-  const hash = bcrypt.hashSync(user.password,10);
-  user.password = hash;
-  Users.add(user)
-    .first()
-    .then(newUser => {
-      delete newUser.password;
-      const token = generateToken(newUser);
-      res.status(201).json({user: newUser, token: token})
+  if (!username || !password) {
+    res.status(400).json({ message: 'Please provide a username and password.' });
+  }
+
+  Users.findBy({ username })
+    .then(ifNew => {
+      if (ifNew) {
+        res.status(409).json({ message: 'User is already a user.' })
+      } else if (!ifNew) {
+        Users.add(user)
+          .then(newUser => {
+            // delete newUser.password;
+            const token = generateToken(newUser);
+            res.status(201).json({user: newUser, token: token})
+          })
+          .catch(err => {
+            res.status(500).json({ message: 'Internal server error.'})
+          })
+      }
     })
-    .catch(err => {
-      res.status(500).json({ message: 'Internal server error.'})
+    .catch(error => {
+      if (username && password && error) {
+        res.status(500).json({ message: 'Internal server error.' });
+      }
     })
 });
 
-router.post('/login', (req, res) => {
-  let {username, password} = req.body;
+router.post('/login', user_body, (req, res) => {
+  let { username, password } = req.body;
 
-  Users.findBy({username})
+  Users.findBy({ username })
     .first()
     .then(user => {
+      if (!user) {
+        res.status(404).json({ message: 'User not found.' })
+      }
       if (user && bcrypt.compareSync(password, user.password)) {
-       const token = generateToken(user) 
-       delete user.password;
+        const token = generateToken(user) 
+        delete user.password;
         res.status(200).json({
-          user, token
+          user, 
+          token
         });
       } else {
-        res.status(401).json({message: "Invalid Credentials"})
+        res.status(401).json({ message: "Invalid Credentials" })
       }
     })
-
+    .catch(error => {
+      res.status(500).json({ message: 'Internal server error.' });
+    })
 });
 
 
