@@ -8,25 +8,21 @@ const validator = require('password-validator')
 const Users = require('./auth-model');
 //Middleware
 const user_body = require('./user-body-middleware');
+const authMiddleware = require('./requires-auth-middleware');
 
 
 router.post('/register', user_body,  (req, res) => {
   let user = req.body;
-  const username = req.body.userman;
-  const password = req.body.password;
-  if (user.password) {
-    const hash = bcrypt.hashSync(user.password, 10);
-    user.password = hash;
-  }
+  const username = req.body.username;
+  const hash = bcrypt.hashSync(user.password, 10);
+  user.password = hash;
 
-  if (!username || !password) {
-    res.status(400).json({ message: 'Please provide a username and password.' });
-  }
+  console.log(username)
 
   Users.findBy({ username })
     .then(ifNew => {
       if (ifNew) {
-        res.status(409).json({ message: 'User is already a user.' })
+        res.status(409).json({ message: 'You are already a user.' })
       } else if (!ifNew) {
         Users.add(user)
           .then(newUser => {
@@ -40,9 +36,8 @@ router.post('/register', user_body,  (req, res) => {
       }
     })
     .catch(error => {
-      if (username && password && error) {
-        res.status(500).json({ message: 'Internal server error.' });
-      }
+      console.log(error)
+      res.status(500).json({ message: 'Internal server error.' });
     })
 });
 
@@ -54,8 +49,7 @@ router.post('/login', user_body, (req, res) => {
     .then(user => {
       if (!user) {
         res.status(404).json({ message: 'User not found.' })
-      }
-      if (user && bcrypt.compareSync(password, user.password)) {
+      } else if (user && bcrypt.compareSync(password, user.password)) {
         const token = generateToken(user) 
         delete user.password;
         res.status(200).json({
@@ -72,19 +66,20 @@ router.post('/login', user_body, (req, res) => {
 });
 
 
-router.delete('/:id', (req, res) => {
-  Users.remove(req.params.id)
-  .then(user => {
+router.delete('/delete', authMiddleware, (req, res) => {
+  const id = req.body.user_id;
+
+  Users.remove(id)
+    .then(user => {
       if (!user) {
           res.status(404).json({message: "No user exists by that ID!"})
       } else {
           res.status(200).json({message: "deleted"})
       }
-  })
-  .catch(err => {
-      console.log(err)
-      res.status(500).json(err)
-  })
+    })
+    .catch(error => {
+      res.status(500).json({ message: 'Internal server error.' });
+    })
 })
 
 router.get("/login/google", passport.authenticate("google", {

@@ -10,7 +10,7 @@ module.exports = (req, res, next) => {
       if(err) {
         res.status(401).json({ message: 'Invalid token in header.' })
       } else {
-        req.user_id = decodedToken.id;
+        req.body.user_id = decodedToken.id;
         next();
       }
     });
