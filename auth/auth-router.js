@@ -125,11 +125,10 @@ router.get("/login/facebook/redirect", passport.authenticate("facebook"), (req, 
 function generateToken(user) {
   const payload = {
     username: user.username,
-    id: user.id,
-    
+    id: user.id
   };
   const options = {
-    expiresIn: "42069d"
+    expiresIn: "8h"
   };
   return jwt.sign(payload, secret.jwtSecret, options);
 }
