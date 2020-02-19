@@ -6,8 +6,7 @@
   "scripts": {
     "server": "nodemon index.js",
     "test": "jest --watch",
-    "startH": "node index.js",
-    "start": "npx knex migrate:latest --env production && node index.js"
+    "start": "node index.js"
   },
   "jest": {
     "server": "nodemon index.js",
