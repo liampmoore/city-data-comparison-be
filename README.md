@@ -1,6 +1,6 @@
 # Back-end
 
-#### https://citrics-staging.herokuapp.com/
+#### https://citrics-io.herokuapp.com/
 
 # Auth - /api/auth
 #### POST Register  - https://citrics-staging.herokuapp.com/api/auth/register
