@@ -17,8 +17,6 @@ router.post('/register', user_body,  (req, res) => {
   const hash = bcrypt.hashSync(user.password, 10);
   user.password = hash;
 
-  console.log(username)
-
   Users.findBy({ username })
     .then(ifNew => {
       if (ifNew) {
