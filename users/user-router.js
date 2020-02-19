@@ -59,7 +59,7 @@ router.post('/', upload.single('userimage'), (req, res, next) => {
         })
 })
 
-router.put('/profile', (req,res) => {
+router.put('/profile', (req, res) => {
     const id = req.body.user_id;
 
     Users.updateUser(id, req.body)
@@ -72,17 +72,16 @@ router.put('/profile', (req,res) => {
     })
 })
 
-router.delete('/profile/:id/image', (req, res) => {
-    if (Number(req.params.id) !== Number(req.decodedJwt.id)) {
-        res.status(401).json({message: 'You cannot edit another user'})
-    } else {
-    Users.deleteImage(req.params.id)
+router.delete('/profile/image', (req, res) => {
+    const id = req.body.user_id;
+
+    Users.deleteImage(id)
         .then(image => {
-            res.status(201).json(image)
+            res.status(200).json({ message: 'Image deleted' })
         })
         .catch(err => {
-            res.status(401).json({message: 'Image deleted', err})
-        })}
+            res.status(500).json({ message: 'Image not deleted' })
+        })
 })
 
 router.get('/profile/:id/image', (req, res) => {
