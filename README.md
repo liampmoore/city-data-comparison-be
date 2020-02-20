@@ -2,6 +2,8 @@
 
 #### https://citrics-io.herokuapp.com/
 
+https://dev.to/christse/how-to-use-heroku-postgresql-for-local-development-with-knex-js-54kp
+
 # Auth - /api/auth
 #### POST Register  - /api/auth/register
 #### POST Login - /api/auth/login
