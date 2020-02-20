@@ -8,14 +8,13 @@ module.exports = (req, res, next) => {
   if (token) {
     jwt.verify(token, secret, (err, decodedToken) => {
       if(err) {
-        res.status(401).json('Unauthorized')
+        res.status(401).json({ message: 'Invalid token in header.' })
       } else {
-        req.decodedJwt = decodedToken;
-        console.log(decodedToken)
+        req.body.user_id = decodedToken.id;
         next();
       }
     });
   } else {
-    res.status(401).json({ you: 'failed' });
+    res.status(400).json({ message: 'Please provide a token in the header.' });
   }
 };

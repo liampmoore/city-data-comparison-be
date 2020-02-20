@@ -3,10 +3,6 @@ const router = require('express').Router();
 const multer = require('multer');
 const db = require("../database/dbConfig.js");
 
-const bcrypt = require('bcryptjs');
-// const secrets = require('../config/secrets');
-// const passport = require('passport');
-// const validator = require('password-validator')
 
 const Users = require('./user-model');
 const Preferences = require('../preferences/preference-model.js')
@@ -20,7 +16,7 @@ const storage = multer.diskStorage({
     }
   });
 
-const fileFilter = (req, file, cb) => {
+    const fileFilter = (req, file, cb) => {
     if (file.mimetype === 'image/jpeg' || file.mimetype === 'image/png') {
         cb(null, true);
     } else {
@@ -34,170 +30,141 @@ const upload = multer({
       fileSize: 1024 * 1024 * 5
     },
     fileFilter: fileFilter
-  });
+});
 
-router.get('/profile/:id', (req, res) => {
-    if (Number(req.params.id) !== Number(req.decodedJwt.id)) {
-        res.status(401).json({message: 'You cannot access another user'})
-    } else {
-    Users.findUserById(req.params.id)
-    .then(user => {
-        delete user.password;
-        console.log(user)
-        res.status(201).json(user)
-    })
-    .catch(err => {
-        res.status(401).json({message: 'Unable to find user', error: err})
-    })};
+router.get('/profile', (req, res) => {
+    const id = req.body.user_id;
+
+    Users.findUserById(id)
+        .then(user => {
+            delete user.password;
+            res.status(200).json(user)
+        })
+        .catch(error => {
+            res.status(400).json({ message: 'Unable to find user' })
+        });
 })
  
 
 
 router.post('/', upload.single('userimage'), (req, res, next) => {
-    const userimg = ({users_id: req.body.users_id, userimage: req.file.path})
+    const userimg = ({users_id: req.body.user_id, userimage: req.file.path})
 
     Users.addImage(userimg)
-    .then(user => {
-        res.status(201).json(user)
-    })
-    .catch(err => {
-        res.status(401).json({
-            message: 'Failed to update!', err
-        })
-    })
-})
-
-router.put('/profile/:id', (req,res) => {
-    if (Number(req.params.id) !== Number(req.decodedJwt.id)) {
-        res.status(401).json({message: 'You cannot edit another user'})
-    } else {
-    Users.updateUser(req.params.id, req.body)
-    .then(user => {
-        delete user.password;
-        res.status(200).json(user);
-    })
-    .catch(err => {
-        res.status(500).json({message: 'Unable to update', error: err})
-    })}
-})
-
-router.delete('/profile/:id/image', (req, res) => {
-    if (Number(req.params.id) !== Number(req.decodedJwt.id)) {
-        res.status(401).json({message: 'You cannot edit another user'})
-    } else {
-    Users.deleteImage(req.params.id)
-        .then(image => {
-            res.status(201).json(image)
+        .then(user => {
+            res.status(201).json(user)
         })
         .catch(err => {
-            res.status(401).json({message: 'Image deleted', err})
-        })}
+            res.status(500).json({ message: 'Failed to post' })
+        })
 })
 
-router.get('/profile/:id/image', (req, res) => {
-    if (Number(req.params.id) !== Number(req.decodedJwt.id)) {
-        res.status(401).json({message: 'You cannot access another user'})
-    } else {
-  Users.findUsersImage(req.params.id)
-      .then(image => {
-          res.status(201).json(image)
-      })
-      .catch(err => {
-          res.status(401).json({message: 'Unable to find image', err})
-      })}
-})
+router.put('/profile', (req, res) => {
+    const id = req.body.user_id;
 
-router.put('/:id/profile', (req,res) => {
-    if (Number(req.params.id) !== Number(req.decodedJwt.id)) {
-        res.status(401).json({message: 'You cannot edit another user'})
-    } else {
-    Users.updateUser(req.params.id, req.body)
+    Users.updateUser(id, req.body)
     .then(user => {
         delete user.password;
         res.status(200).json(user);
     })
     .catch(err => {
-        res.status(500).json({message: 'Unable to update', error: err})
-    })}
+        res.status(500).json({ message: 'Unable to update' })
+    })
 })
 
+router.delete('/profile/image', (req, res) => {
+    const id = req.body.user_id;
+
+    Users.deleteImage(id)
+        .then(image => {
+            res.status(200).json({ message: 'Image deleted' })
+        })
+        .catch(err => {
+            res.status(500).json({ message: 'Image not deleted' })
+        })
+})
+
+router.get('/profile/image', (req, res) => {
+    const id = req.body.user_id;
+
+    Users.findUsersImage(id)
+        .then(image => {
+            res.status(200).json(image)
+        })
+        .catch(err => {
+            res.status(500).json({ message: 'Unable to find image' })
+        })
+})
 
 
 //GET a users favorited cities based on users_id
-router.get("/favs/:id", (req, res) => {
-    if (Number(req.params.id) !== Number(req.decodedJwt.id)) {
-        res.status(401).json({message: 'You cannot access another user'})
-    } else {
-    Users.getFavs(req.params.id)
-    .then(favs => {
-        res.json(favs);
-    })
-    .catch(err => {
-        console.log(err);
-        res.status(401).json({ message: "failed to get favs", error: err });
-    })};
+router.get("/favs", (req, res) => {
+    const id = req.body.user_id;
+
+    Users.getFavs(id)
+        .then(favs => {
+            res.status(200).json(favs);
+        })
+        .catch(err => {
+            res.status(500).json({ message: "failed to get favs" });
+        });
 })
 
 //POST a favorite using a users_id in url and city_id in the body of the request
-router.post("/favs/:id", (req, res) => {
-    if (Number(req.params.id) !== Number(req.decodedJwt.id)) {
-        res.status(401).json({message: 'You cannot edit another user'})
-    } else {
-    Users.addFav(req.body.city_id, parseInt(req.params.id))
-    .then(fav => {
-        res.json(fav[0]);
-    })
-    .catch(err => {
-        console.log(err);
-        res.status(401).json({ message: "failed to add fav", error: err });
-    })};
+router.post("/favs", (req, res) => {
+    const id = req.body.user_id;
+
+    Users.addFav(req.body.city_id, parseInt(id))
+        .then(fav => {
+            res.json(fav[0]);
+        })
+        .catch(err => {
+            res.status(500).json({ message: "failed to add fav" });
+        });
 })
 
 
 //DELETE the favorite based on the id of the table entry
-router.delete("/favs/:id", (req, res) => {
-    if (Number(req.params.id) !== Number(req.decodedJwt.id)) {
-        res.status(401).json({message: 'You cannot access another user'})
-    } else {
-    Users.removeFav(req.body.city_id, req.params.id)
-    .then(fav => {
-      res.json(fav);
-    })
-    .catch(err => {
-      res.status(401).json({ message: "fav not deleted", error: err });
-    })};
+router.delete("/favs", (req, res) => {
+    const id = req.body.user_id;
+
+    Users.removeFav(req.body.city_id, id)
+        .then(fav => {
+            res.status(200).json(fav);
+        })
+        .catch(err => {
+            res.status(500).json({ message: "fav not deleted" });
+        });
 })
 
 
 // TODO - POST new preferences using user's ID --- /api/users/:id/preferences
-router.post('/:id/preferences', (req, res) => {
-    const id = req.params.id;
+router.post('/preferences', (req, res) => {
+    const id = req.body.user_id;
     const preferences = req.body; 
-    const newPreferences = {...preferences, user_id:id }
+    const newPreferences = {...preferences, user_id: id }
 
-    Preferences
-    .insert(newPreferences)
-    .then(added => {
-        res.status(200).json(added)
-    })
-    .catch(error => {
-          res.status(500).json({error: error.stack})
-     })
+    Preferences.insert(newPreferences)
+        .then(added => {
+            res.status(200).json(added)
+        })
+        .catch(error => {
+            res.status(500).json({ message: 'error with saving'})
+        })
 })
 
 
 // TODO - GET user preferences using user's ID --- /api/users/:id/preferences
 router.get('/:id/preferences', (req, res) => {
-    const id = req.params.id;
+    const id = req.body.user_id;
 
-    Preferences
-    .findByUser(id)
-    .then(preferences => {
-        res.status(201).json(preferences)
-    })
-    .catch(error => {
-          res.status(500).json({message: "Unable to find any preferences. Try again later."})
-     })
+    Preferences.findByUser(id)
+        .then(preferences => {
+            res.status(201).json(preferences)
+        })
+        .catch(error => {
+            res.status(500).json({message: "Unable to find any preferences. Try again later."})
+        })
 })
 
 
