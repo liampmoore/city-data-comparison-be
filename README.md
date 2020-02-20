@@ -51,3 +51,20 @@ Requires users ID
 
 #### DELETE a city from favorites - https://citrics-staging.herokuapp.com/api/users/favs
 Requires table ID
+
+### .env variables
+GOOGLE_CLIENT
+
+GOOGLE_SECRET
+
+LINKEDIN_CLIENT
+
+LINKEDIN_SECRET
+
+FACEBOOK_CLIENT
+
+FACEBOOK_SECRET
+
+SESSION_COOKIE_KEY
+
+SECRET_MESSAGE

@@ -2,6 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const helmet = require('helmet');
 const passport = require('passport');
+require('dotenv').config();
 const passportSetup = require('../config/passport-setup');
 const keys = require('../config/secrets');
 const authenticate = require('../auth/requires-auth-middleware')
