@@ -1,3 +1,5 @@
+require('dotenv').config();
+
 module.exports = {
     google: {
         clientID: process.env.GOOGLE_CLIENT,
@@ -14,5 +16,5 @@ module.exports = {
     session: {
         cookieKey: process.env.SESSION_COOKIE_KEY
     },
-    jwtSecret: process.env.JWT_SECRET || process.env.SECRET_MESSAGE
+    jwtSecret: process.env.JWT_SECRET
 }
