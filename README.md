@@ -3,6 +3,14 @@
 #### https://citrics-io.herokuapp.com/
 
 https://dev.to/christse/how-to-use-heroku-postgresql-for-local-development-with-knex-js-54kp
+=======
+## Production - 
+"master" Branch, manually deployed via Elastic Beanstalk and available at:
+#### https://be.citrics.io
+
+## Staging
+"staging" branch, manually deployed at:
+#### https://citrics-staging.herokuapp.com
 
 # Auth - /api/auth
 #### POST Register  - /api/auth/register
@@ -15,6 +23,7 @@ https://dev.to/christse/how-to-use-heroku-postgresql-for-local-development-with-
 #### GET Login Facebook - /api/auth/login/facebook
 #### GET Login Facebook redirect - /api/auth/login/facebook/redirect
 
+# ----- All endpoints at /api/users are restricted to a valid JWT -----
 
 # Users - /api/users 
 ## User 
