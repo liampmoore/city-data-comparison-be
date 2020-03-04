@@ -14,6 +14,9 @@ module.exports = (req, res, next) => {
         next();
       }
     });
+  } else if (process.env.DB_ENV === 'testing') {
+    reg.body.user_id = 1
+    next();
   } else {
     res.status(400).json({ message: 'Please provide a token in the header.' });
   }
