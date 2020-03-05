@@ -1,12 +1,12 @@
 const db = require('../database/dbConfig');
-const request = require('supertest')
-const server = require('../api/server')
+const request = require('supertest');
+const server = require('../api/server');
 
 
 
 describe('auth-router.js', () => {
     beforeEach(async () => {
-      await db('users').truncate();
+      await db.raw('TRUNCATE usersimage, users RESTART IDENTITY CASCADE');
     });
     
 describe('POST to /api/auth/register', () => {

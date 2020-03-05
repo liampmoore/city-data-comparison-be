@@ -5,12 +5,12 @@
   "main": "index.js",
   "scripts": {
     "server": "nodemon index.js",
-    "test": "jest --watch",
+    "test": "knex migrate:lastest && jest --watch",
     "start": "npx knex migrate:latest --env production && node index.js"
   },
   "jest": {
     "server": "nodemon index.js",
-    "test": "cross-env jwtSecret=testing jest --watch",
+    "test": "cross-env JWT_SECRET=testing DB_ENV=testing jest --watch",
     "start": "node index.js"
   },
   "repository": {
