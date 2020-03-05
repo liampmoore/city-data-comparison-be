@@ -12,6 +12,7 @@ const authenticate = require('../auth/requires-auth-middleware')
 const authRouter = require('../auth/auth-router.js');
 const userRouter = require('../users/user-router.js');
 const preferenceRouter = require('../preferences/preference-router.js');
+const restaurant = require('../restaurants/restaurant-router');
 
 
 
@@ -29,7 +30,8 @@ server.use(passport.initialize());
 server.use('/uploads', express.static('uploads'));
 server.use('/api/auth', authRouter);
 server.use('/api/users', authenticate, userRouter);
-server.use('/api/preferences', preferenceRouter)
+server.use('/api/preferences', preferenceRouter);
+server.use('/api/restaurant', restaurant)
 
 
 
