@@ -9,8 +9,8 @@ const config = {
     }
 }
 
-router.get('/', async (req, res) => {
-    const info = await req.body
+router.get('/:latitude/:longitude', async (req, res) => {
+    const info = await req.params
 
     axios.get(`https://api.yelp.com/v3/businesses/search?latitude=${info.latitude}&longitude=${info.longitude}`, config)
         .then(response => {
