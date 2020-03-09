@@ -1,3 +1,5 @@
+require('dotenv').config();
+
 const passport = require('passport');
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const keys = require('./secrets');
@@ -19,8 +21,8 @@ passport.deserializeUser((user, done) => {
 passport.use(
     new GoogleStrategy({
         // options for google strategy
-        clientID: keys.google.clientID,
-        clientSecret: keys.google.clientSecret,
+        clientID: keys.google.clientID || 'test',
+        clientSecret: keys.google.clientSecret || 'test',
         callbackURL: '/api/auth/login/google/redirect'
     }, (accessToken, refreshToken, profile, done) => {
         // console.log(profile)
@@ -49,8 +51,8 @@ passport.use(
 passport.use(
     new LinkedInStrategy({
         // options for linkedin strategy
-        clientID: keys.linkedin.clientID,
-        clientSecret: keys.linkedin.clientSecret,
+        clientID: keys.linkedin.clientID || 'test',
+        clientSecret: keys.linkedin.clientSecret || 'test',
         callbackURL: '/api/auth/login/linkedin/redirect'
     }, (accessToken, refreshToken, profile, done) => {
         console.log(profile)
@@ -80,8 +82,8 @@ passport.use(
 passport.use(
     new FacebookStrategy({
         // options for facebook strategy
-        clientID: keys.facebook.clientID,
-        clientSecret: keys.facebook.clientSecret,
+        clientID: keys.facebook.clientID || 'test',
+        clientSecret: keys.facebook.clientSecret || 'test',
         callbackURL: '/api/auth/login/facebook/redirect'
     }, (accessToken, refreshToken, profile, done) => {
         console.log(profile)

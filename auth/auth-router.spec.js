@@ -1,56 +1,54 @@
 const db = require('../database/dbConfig');
-const request = require('supertest')
-const server = require('../api/server')
+const request = require('supertest');
+const server = require('../api/server');
 
 
+const newUser = {
+  username: "Test12" + Date.now(),
+  password: "Test12"
+}
 
 describe('auth-router.js', () => {
-    beforeEach(async () => {
-      await db('users').truncate();
-    });
-    
-describe('POST to /api/auth/register', () => {
-    it('responds with 201 OK', async done => {
-      await request(server)
-        .post('/api/auth/register')
-        .send({ username: 'hahahahaha', password: 'hahahahaha'})
-        .expect(201);
 
-      done();
+  beforeEach(async () => {
+      await db.raw('TRUNCATE usersimage, users RESTART IDENTITY CASCADE');
     });
 
-    it('responds with JSON', async done => {
-      await request(server)
-        .post('/api/auth/register')
-        .send({ username: 'test', password: 'test' })
-        .expect('Content-Type', /json/i);
+  describe('/api', () => {
+      // endpoint for .get() /api/auth
+      it('should return an 404 status code .GET from /api/auth', async () => {
+      const response = await request(server).get('/api/auth');
+      expect(response.status).toEqual(404);
+      });
 
-      done();
-    });
-  });
+      it('should return a JSON object .GET from /api/auth', async () => {
+      const response = await request(server).get('/api/auth');
+      expect(response.type).toEqual('text/html');
+      });
 
-describe('POST  to /api/auth/login', () => {
-    it('responds with 200 OK', async done => {
-      await request(server)
-        request(server)
-        .post('/api/auth/login')
-        .send({ username: 'TakeTest', password: 'MakeTest' })
-        .expect(200);
-
-      done();
-    });
-
-    it('responds with JSON', async done => {
-      await request(server)
-         request(server)
-        .post('/api/auth/login')
-        .send({ username: 'Muamer', password: 'Kukic' })
-        .expect('Content-Type', /json/i);
-
-      done();
-    });
-  });
+      // endpoint for .post /api/auth/register
+      it('should return an 400 status code .POST from /register with no payload for login', async () => {
+      const response = await request(server).post('/api/auth/register');
+      expect(response.status).toEqual(400);
+      });
   
+      it('should return a JSON object .POST from /register', async () => {
+      const response = await request(server).post('/api/auth/register').send(newUser)
+      expect(response.status).toBe(201);
+      expect(response.type).toEqual('application/json');
+      });
 
-
+      // endpoint for .post /api/register
+      it('should return an 400 status code .POST from /register with no payload for login', async () => {
+      const response = await request(server).post('/api/auth/login');
+      expect(response.status).toEqual(400);
+      });
+  
+      it('should return a JSON object .POST from /register', async () => {
+      await request(server).post('/api/auth/register').send(newUser)
+      const response = await request(server).post('/api/auth/login').send(newUser)
+      expect(response.status).toBe(200);
+      expect(response.type).toEqual('application/json');
+      });
+  });
 });
