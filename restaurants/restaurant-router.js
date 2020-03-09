@@ -25,7 +25,7 @@ router.get('/restaurant/:latitude/:longitude', async (req, res) => {
 
 router.get('/events/:latitude/:longitude', async (req, res) => {
     const info = await req.params
-    const time = Date.now()
+    const time = Math.floor(Date.now() / 1000)
 
     axios.get(`https://api.yelp.com/v3/events?latitude=${info.latitude}&longitude=${info.longitude}&limit=10&start_date=${time}`, config)
         .then(response => {
