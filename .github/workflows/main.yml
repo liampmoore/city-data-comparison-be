@@ -52,9 +52,9 @@ jobs:
       with:
         aws_access_key: ${{secrets.AWS_ACCESS_KEY}}
         aws_secret_key: ${{secrets.AWS_SECRET_KEY}}
-        application_name: citrics-be
+        application_name: 'citrics-be'
         environment_name: <beanstalk-env-name> //TODO add the correctly production environment
-        region: us-east-1
+        region: 'us-east-1'
         version_label: "my-app-${{ steps.format-time.outputs.replaced }}" // Using timestamp create on step #
         deployment_package: deploy.zip
 
