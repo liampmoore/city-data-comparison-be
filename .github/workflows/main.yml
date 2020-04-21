@@ -1,6 +1,9 @@
-name: CI   // Any name of your choice
+name: city-data-comparison-be
 
-on: [push] // GitHub event like push, pull-request etc
+on:
+  push:
+    branches:
+    - master
 
 jobs:
   build:
@@ -40,14 +43,17 @@ jobs:
         string: "${{ steps.current-time.outputs.time }}"
         replace-with: '-'
         flags: 'g'
-    
-    - name: Beanstalk Deploy
+        
+    - name: Beanstalk Deploy my app
       uses: einaregilsson/beanstalk-deploy@v4
       with:
-        aws_access_key: 
-        aws_secret_key: 
-        region: 
-        application_name: 
-        environment_name: 
-        version_label: 
-        deployment_package: 
+        aws_access_key: ${{secrets.AWS_ACCESS_KEY}}
+        aws_secret_key: ${{secrets.AWS_SECRET_KEY}}
+        application_name: <app-name>
+        environment_name: <beanstalk-env-name>
+        region: <aws_region>
+        version_label: "my-app-${{ steps.format-time.outputs.replaced }}" // Using timestamp create on step #
+        deployment_package: deploy.zip
+
+    - name: Deployed successfully!
+      run: echo App deployed to ELB
