@@ -7,6 +7,7 @@ https://dev.to/christse/how-to-use-heroku-postgresql-for-local-development-with-
 ## Production - 
 "master" Branch, manually deployed via Elastic Beanstalk and available at:
 #### https://be.citrics.io
+There is a github action set up in main.yml to automatically deploy when you push to master. To monitor the status of the automatic deployment go to the actions tab of this repository, click the latest commit and click "build (10.x)" in the list of jobs on the left. If the logs show that the deployment failed (often due to Amazon's servers being flooded with status code 503 or similar) you can click "Re-run jobs" on the top right to try again.
 
 ## Staging
 "staging" branch, manually deployed at:
