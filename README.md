@@ -5,9 +5,16 @@
 https://dev.to/christse/how-to-use-heroku-postgresql-for-local-development-with-knex-js-54kp
 =======
 ## Production - 
-"master" Branch, manually deployed via Elastic Beanstalk and available at:
+"master" Branch, automatically deployed via Elastic Beanstalk and available at:
 #### https://be.citrics.io
-There is a github action set up in main.yml to automatically deploy when you push to master. To monitor the status of the automatic deployment go to the actions tab of this repository, click the latest commit and click "build (10.x)" in the list of jobs on the left. If the logs show that the deployment failed (often due to Amazon's servers being flooded with status code 503 or similar) you can click "Re-run jobs" on the top right to try again.
+
+There is a github action set up in ./github/workflows/main.yml to automatically deploy when you push to master. To monitor the status of the automatic deployment go to the actions tab of this repository, click the latest commit and click "build (10.x)" in the list of jobs on the left. If the logs show that the deployment failed (often due to Amazon's servers being flooded with status code 503 or similar) you can click "Re-run jobs" on the top right to try again.
+
+You'll need to get your Amazon secret keys "AWS_ACCESS_KEY" and "AWS_SECRET_KEY" set up in github secrets on this github repository under "Settings" for this to work. Only an SL or an Engineering Manager currently has permissions to add secrets to this github repo, so you'll need to ask them to do it for you.
+
+You can also just manually deploy on AWS Beanstalk console. You just need to compress the whole repo in a zip file and upload on the AWS Beanstalk site.
+#### https://console.aws.amazon.com/elasticbeanstalk/
+
 
 ## Staging
 "staging" branch, manually deployed at:
