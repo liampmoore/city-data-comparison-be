@@ -7,7 +7,7 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest  // Using latest ubuntu latest version
+    runs-on: ubuntu-latest
     strategy:
       matrix:
         node-version: [10.x]
