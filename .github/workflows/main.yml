@@ -58,5 +58,5 @@ jobs:
         version_label: "my-app-${{ steps.format-time.outputs.replaced }}" // Using timestamp create on step #
         deployment_package: deploy.zip
 
-    - name: Deployed successfully!
+    - name: Deployed successfully! // Testing
       run: echo App deployed to ELB
